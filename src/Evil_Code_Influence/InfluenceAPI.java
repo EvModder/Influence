@@ -18,6 +18,7 @@ import Evil_Code_Influence.servant.AbilityConfig.Ability;
 
 public class InfluenceAPI {
 	static Influence plugin;
+	
 	public InfluenceAPI(){
 		plugin = Influence.getPlugin();
 	}
@@ -64,7 +65,7 @@ public class InfluenceAPI {
 			return plugin.masterList.get(masterUUID).hasServant(servantUUID);
 		}
 		else{
-			Master master = new Master(masterUUID, loadEmptyMasterPreferences(masterUUID));
+			Master master = new Master(masterUUID, loadEmptyMasterPreferences(masterUUID), Influence.minWage());
 			master.addServant(servantUUID, false);
 			if(master.hasServant(servantUUID)){
 				plugin.addMaster(masterUUID, master);

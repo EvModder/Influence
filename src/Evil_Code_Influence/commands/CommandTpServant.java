@@ -36,7 +36,7 @@ public class CommandTpServant implements CommandExecutor{
 			sender.sendMessage("§cYou are not the master of "+p.getName());
 			return true;
 		}
-		sender.sendMessage(Influence.prefix+" §aTeleporting to §7"+p.getName()+"§a...");
+		sender.sendMessage(Influence.prefix+"§aTeleporting to §7"+p.getName()+"§a...");
 		((Player)sender).teleport(p);
 		
 		return true;

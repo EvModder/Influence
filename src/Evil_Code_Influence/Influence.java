@@ -27,12 +27,14 @@ import Evil_Code_Influence.servant.AbilityConfig.Ability;
 public final class Influence extends JavaPlugin{
 	private static Influence plugin;
 	private ConfigSettings config;
-	public final static String prefix = "§8[§2Ifl§8] §f";
+	public final static String prefix = "§8[§2Ifl§8]§f ";
+	private static double MIN_WAGE;
 	protected Map<UUID, Master> masterList = new HashMap<UUID, Master>();
 	final int projectID=0;//= ???; TODO: Need to find this out when uploaded to bukkit.com!
 	
 	@Override public void onEnable(){
 		getLogger().info("Loading " + getDescription().getFullName());
+		
 		//this= plugin instance
 		//projectID = bukkit id
 		//this.getFile() = the file to replace/update
@@ -42,6 +44,8 @@ public final class Influence extends JavaPlugin{
 //		new Updater(this, projectID, this.getFile(), Updater.UpdateType.DEFAULT, true);
 		plugin = this;
 		config = new ConfigSettings(this);
+		
+		MIN_WAGE = plugin.getConfig().getDouble("path/to/setting");//TODO: write config
 		
 		loadFiles();
 		new InfluenceAPI();
@@ -64,7 +68,7 @@ public final class Influence extends JavaPlugin{
 	private void unregisterEvents(){
 		HandlerList.unregisterAll(this);
 	}
- 	
+	
 	private void loadFiles(){
 //		getConfig().options().copyDefaults(true);
 		BufferedReader reader = null;
@@ -81,7 +85,7 @@ public final class Influence extends JavaPlugin{
 		UUID mUUID=null, sUUID=null;
 		try{
 			while((line = reader.readLine()) != null){
-				line = line.replace(" ", "").toLowerCase();
+				String[] lineData = line.replace(" ", "").toLowerCase().split("\\|");
 				if(line.startsWith("m|")){
 					
 					// In the event that the last master "scanned in" had no servants attributed to them
@@ -91,7 +95,7 @@ public final class Influence extends JavaPlugin{
 					}
 					
 					try{
-						mUUID = UUID.fromString(line.split("\\|")[1]);
+						mUUID = UUID.fromString(lineData[1]);
 					}catch(IllegalArgumentException ex1){
 						getLogger().warning("ERROR: Could not load the masterlist, please check the file for errors");
 						continue;
@@ -101,22 +105,36 @@ public final class Influence extends JavaPlugin{
 						continue;
 					}
 					
+					// If they have custom AbilityConfig preferences and/or starting wage for their servants,
+					// load it & add them with it
 					AbilityConfig preferences = null;
-					// If they have custom AbilityConfig preferences for servants, load it & add them with it
-					if(line.contains("{") && line.contains("}")){
-						preferences = new AbilityConfig(false);
-						line = ','+line.substring(line.indexOf("{")+1, line.indexOf("}"))+',';
-						
-						for(Ability ability : AbilityConfig.Ability.values()){
-							preferences.setAbility(ability, line.contains(','+ability.name()+','));
+					double wage = MIN_WAGE;
+					
+					for(int i=3; i<lineData.length; i++){
+						String data = lineData[i];
+						if(data.startsWith("perms{") && data.endsWith("}")){
+							data = ','+data.substring(data.indexOf("{")+1, data.indexOf("}"))+',';
+							
+							preferences = new AbilityConfig(false);
+							for(Ability ability : AbilityConfig.Ability.values()){
+								preferences.setAbility(ability, data.contains(','+ability.name()+','));
+							}
+						}
+						else if(data.startsWith("wage{") && data.endsWith("}")){
+							try{
+								wage = Double.parseDouble(data.substring(data.indexOf('{')+1, data.indexOf('}')));
+							}
+							catch(NumberFormatException ex){
+								getLogger().warning("Unable to load number value for WAGE in masterlist");
+							}
 						}
 					}
-					master = new Master(mUUID, preferences);
+					master = new Master(mUUID, preferences, wage);
 				}
 				else if(master != null && line.startsWith("s|")){
 					sUUID = null;
 					try{
-						sUUID = UUID.fromString(line.split("\\|")[1]);
+						sUUID = UUID.fromString(lineData[1]);
 					}catch(IllegalArgumentException ex1){
 						getLogger().warning("ERROR: Could not load the masterlist, please check the file for errors");
 						continue;
@@ -126,15 +144,30 @@ public final class Influence extends JavaPlugin{
 						continue;
 					}
 					
-					// If they have a custom AbilityConfig, load it & add them with it
-					if(line.contains("{") && line.contains("}")){
-						line = ','+line.substring(line.indexOf("{")+1, line.indexOf("}"))+',';
+					if(lineData.length >= 3){
+						Servant servant = new Servant(sUUID, mUUID, master.getPreferences(), MIN_WAGE);
 						
-						AbilityConfig abilities = new AbilityConfig(false);
-						for(Ability ability : AbilityConfig.Ability.values()){
-							abilities.setAbility(ability, line.contains(','+ability.name()+','));
+						for(int i=3; i<lineData.length; i++){
+							String data = lineData[i];
+							
+							if(data.startsWith("perms{") && data.endsWith("}")){
+								data = ','+data.substring(data.indexOf("{")+1, data.indexOf("}"))+',';
+								
+								for(Ability ability : AbilityConfig.Ability.values()){
+									servant.setAbility(ability, data.contains(','+ability.name()+','));
+								}
+							}
+							else if(data.startsWith("wage{") && data.endsWith("}")){
+								try{
+									double wage = Double.parseDouble(data.substring(data.indexOf('{')+1, data.indexOf('}')));
+									servant.setWage(wage);
+								}
+								catch(NumberFormatException ex){
+									getLogger().warning("Unable to load number value for WAGE in masterlist");
+								}
+							}
 						}
-						master.addServant(new Servant(sUUID, mUUID, abilities), true);//force=true to skip rank checking
+						master.addServant(servant, true);//force=true to skip rank checking
 					}
 					else master.addServant(sUUID, true);//force=true to skip rank checking
 				}
@@ -147,7 +180,7 @@ public final class Influence extends JavaPlugin{
 		}
 		catch(IOException e){}
 		getLogger().info("Enable complete!  ["+masterList.size()+"] master profiles loaded");
-    }
+	}
 	
 	private void saveFiles(){
 		/** Example File:
@@ -155,10 +188,10 @@ public final class Influence extends JavaPlugin{
 		 * MasterList:
 		 *    m|134534-143f1-134rf134|Setteal:
 		 *          s|134134-13414-134143-134143|FoofPuss
-		 *          s|q34134-13413-134543-3434f4|DiamondBlocks{break_blocks,sleep,eat,attack}
-		 *          s|345345-asdgg-34f43f-ah34t3|pwu1
+		 *          s|q34134-13413-134543-3434f4|DiamondBlocks|perms{break_blocks,sleep,eat,attack}|wage{50}
+		 *          s|345345-asdgg-34f43f-ah34t3|pwu1|wage{25.50}
 		 *    
-		 *    m|asgg5g-5234v-34t53535|lekrosa{place_blocks,break_blocks}:
+		 *    m|asgg5g-5234v-34t53535|lekrosa|perms{place_blocks,break_blocks}:
 		 *          s|344334-34f4f-13g5hh-5234f4|Evil_Witchdoctor
 		 * 
 		*/
@@ -168,7 +201,9 @@ public final class Influence extends JavaPlugin{
 		masters.sort(new Comparator<Master>() {
 			@Override
 			public int compare(final Master m1, final Master m2) {
-				return (m1.getPlayerUUID().toString().compareTo(m2.getPlayerUUID().toString()));
+				// Alphabetical sorting by username
+				return (getServer().getOfflinePlayer(m1.getPlayerUUID()).getName()
+						.compareTo(getServer().getOfflinePlayer(m2.getPlayerUUID()).getName()));
 			}
 		});
 		
@@ -180,7 +215,7 @@ public final class Influence extends JavaPlugin{
 //				// the uuid of the master and the abilities he/she allows servants to use by default
 //				 *  
 //				 *  134sdf-34f32-3fec3rc-fl35b{break_blocks,eat,sleep,teleport,attack_monsters,attack_animals}
-				file.append('{');
+				file.append("|perms{");
 				boolean hasAny = false;
 				for(Ability ability : Ability.values()){
 					if(master.getPreferences().hasAbility(ability)){
@@ -191,6 +226,12 @@ public final class Influence extends JavaPlugin{
 				}
 				file.append('}');
 			}
+			if(master.getStartingWage() != MIN_WAGE){
+				file.append("|wage{");
+				file.append(String.valueOf(master.getStartingWage()));
+				file.append('}');
+			}
+			
 			file.append(":\n");
 			
 			for(Servant servant : master.getServants()){
@@ -199,7 +240,7 @@ public final class Influence extends JavaPlugin{
 				file.append('|'); file.append(getServer().getOfflinePlayer(servant.getPlayerUUID()).getName());
 				
 				if(servant.getAbilityConfig().equals(master.getPreferences()) == false){
-					file.append('{');
+					file.append("|perms{");
 					boolean hasAny = false;
 					for(Ability ability : Ability.values()){
 						if(servant.getAbilityConfig().hasAbility(ability)){
@@ -208,6 +249,11 @@ public final class Influence extends JavaPlugin{
 							file.append(ability.name());
 						}
 					}
+					file.append('}');
+				}
+				if(servant.getWage() != master.getStartingWage()){
+					file.append("|wage{");
+					file.append(String.valueOf(servant.getWage()));
 					file.append('}');
 				}
 				file.append('\n');
@@ -244,5 +290,6 @@ public final class Influence extends JavaPlugin{
 	
 	public ConfigSettings getConfigSettings(){return config;}
 	
+	public static double minWage(){return MIN_WAGE;}
 	public static Influence getPlugin(){return plugin;}
 }

@@ -75,7 +75,8 @@ public class CommandGiveServant implements CommandExecutor{
 			}
 			if(servant.isOnline()){
 				servant.getPlayer().sendMessage(
-						Influence.prefix+"§7 "+sender.getName()+"§6 gave you as a servant to §7"+employer.getName());
+						Influence.prefix+"§7 "+sender.getName()+CommandManager.msgC+" gave you as a servant to §7"+employer.getName()
+						+ CommandManager.msgC+'.');
 			}
 		}
 		return success;

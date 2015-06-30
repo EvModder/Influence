@@ -1,9 +1,11 @@
-#Note, only supports EssentialsEco as of yet for economy features.  Will be adding comprehensive support in the upcoming bukkit release.
+#Note, requires Vault to support all economies. Fallback economy is EssentialsEco, so if this is not your currency base it is suggested you install Vault
 
 MaxServantTime: 7d
 CanFreeHired: true
 FreedHiredGetsPartPay: true
-MinWage: 0
+MinDailyWage: 0
+ContinuousWage: true # Daily wage is not given all at once, but steadily over time
+
 MaxServants: 0 #0 for no limit
 AllowServantsToOwnServants: true
 

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,35 +21,41 @@ import Evil_Code_Influence.Influence;
 public class CommandManager implements TabExecutor{
 	private Influence plugin;
 	private int offerTimer;//default in config is 120seconds
+	protected static ChatColor msgC;//TODO: replace all instances of §6 with defaultTradeColor //now msgC
 	private Map<Long, TradeOffer> pendingTrades;
 	
 	CommandGiveServant give;
 	CommandSellServant sell;
 	CommandTradeServant trade;
+	CommandHireServant hire;
 	CommandReleaseServant release;
 	CommandCollectServant collect;
 	CommandPunishServant punish;
-	CommandHireServant hire;
 	CommandTpServant tp;
 	CommandTphereServant tphere;
+	CommandSetWageServant setWage;
 	CommandInvseeServant invsee;
 	CommandEnderchestServant enderchest;
 	CommandInfluenceGUI gui;
 
 	public CommandManager(){
 		plugin = Influence.getPlugin();
-		offerTimer = plugin.getConfig().getInt("path/to/setting");//TODO: finish making config
+		
+		//TODO: make config!
+		offerTimer = plugin.getConfig().getInt("path/to/setting");
+		msgC = ChatColor.getByChar(plugin.getConfig().getString("path/to/setting").replace("&", ""));
 		pendingTrades = new HashMap<Long, TradeOffer>();
 		
 		give = new CommandGiveServant();
 		sell = new CommandSellServant(this);
 		trade = new CommandTradeServant(this);
+		hire = new CommandHireServant(this);
 		release = new CommandReleaseServant();
 		collect = new CommandCollectServant();
 		punish = new CommandPunishServant();
-		hire = new CommandHireServant();
 		tp = new CommandTpServant();
 		tphere = new CommandTphereServant();
+		setWage = new CommandSetWageServant();
 		invsee = new CommandInvseeServant();
 		enderchest = new CommandEnderchestServant();
 		gui = new CommandInfluenceGUI();
@@ -92,7 +100,7 @@ public class CommandManager implements TabExecutor{
 			"§8 - §2/§7i punish <Name/all> <#amt>§f  -  Punish a servant by damaging their health the specified amount\n" +
 			"§8 - §2/§7i collect <Name/all> <items/xp/all>§f  -  Collect items or experience from a servant" */
 			//
-			// The VERY OLD verstion of /s help (about 3 years old, completely irrelevant now after plugin rewrite):
+			// The VERY OLD verstion of /s help (about 3.5 years old, completely irrelevant now after plugin rewrite):
 			//
 			/* 		"§8§l--- §7§o~ §6§o§lSlaveMaster Commands §7§o~ §8§l---\n" +
 			"§51§8. /s on/off §6--§8 Toggle the plugin on and off\n" +
@@ -129,13 +137,16 @@ public class CommandManager implements TabExecutor{
 			trade.onCommand(sender, command, label, args);//TODO: write tradeServant() method - Done but needs testing
 		}
 		else if(cmdName.equals("hire")){
-			hire.onCommand(sender, command, label, args);//TODO: write onCommand
+			hire.onCommand(sender, command, label, args);// DONE! - Done but needs testing
 		}
 		else if(cmdName.equals("punish")){
 			punish.onCommand(sender, command, label, args);// DONE!
 		}
 		else if(cmdName.equals("collect")){
 			collect.onCommand(sender, command, label, args);// DONE! - Done but needs testing
+		}
+		else if(cmdName.equals("setwage")){
+			setWage.onCommand(sender, command, label, args);// DONE! - Done but needs testing
 		}
 		else if(cmdName.equals("invsee")){
 			invsee.onCommand(sender, command, label, args);// DONE! - Done but needs testing
@@ -217,8 +228,8 @@ public class CommandManager implements TabExecutor{
 		Random rand = new Random();
 		return colors.charAt(rand.nextInt(colors.length()));
 	}
-
-	public void addTradeOffer(TradeOffer tradeOffer){
+	
+	public boolean addTradeOffer(TradeOffer tradeOffer){
 		for(TradeOffer offer : pendingTrades.values()){
 			if(offer.buyerUUID.equals(tradeOffer.buyerUUID)){
 				Player seller = plugin.getServer().getPlayer(tradeOffer.sellerUUID);
@@ -227,21 +238,28 @@ public class CommandManager implements TabExecutor{
 					seller.sendMessage(Influence.prefix+" §7"+buyer.getName()
 							+"§c already has pending offers at this time, try again later");
 				}
-				return;
+				return false;
 			}
 		}
 		
 		//put a timestamp on the offer. Once the offer has expired, it will be removed automatically.
 		pendingTrades.put(Calendar.getInstance().getTimeInMillis(), tradeOffer);
 		
-		Player buyer = plugin.getServer().getPlayer(tradeOffer.buyerUUID);
-		if(buyer != null){
-			buyer.sendMessage(Influence.prefix +
-				" §6Type §2/ifl accept§6 to accept this offer and §2/ifl deny§6 to deny it."
-				+ " Offer expires in §c"+offerTimer+"§6 seconds.");
-		}
+		Player seller = plugin.getServer().getPlayer(tradeOffer.sellerUUID);
+		if(seller != null) seller.sendMessage(Influence.prefix+"§a Offer sent!");
+		
+		final UUID buyerUUID = tradeOffer.buyerUUID;
+		new BukkitRunnable(){@Override public void run(){
+			Player buyer = plugin.getServer().getPlayer(buyerUUID);
+			if(buyer != null){
+				buyer.sendMessage(Influence.prefix +
+						msgC+" Type §2/ifl accept"+msgC+" to accept this offer and §2/ifl deny"+msgC+" to deny it."
+						+ " Offer expires in §c"+offerTimer+msgC+" seconds.");
+			}
+		}}.runTaskLater(plugin, 1);// 1 tick delay
 		
 		clearOffersLoop();
+		return true;
 	}
 	
 	boolean running = false;

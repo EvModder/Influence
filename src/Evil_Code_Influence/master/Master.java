@@ -12,14 +12,16 @@ import Evil_Code_Influence.servant.Servant;
 public class Master {
 	private UUID masterUUID;
 	private Map<UUID, Servant> servants = new HashMap<UUID, Servant>();
-	private AbilityConfig preferences;
+	private AbilityConfig preferences;//the default perms this master's servants get
+	private double startingWage;//the default wage this master's servants get
 	
 //	public Master(){
 //	}
 	
-	public Master(UUID playerUUID, AbilityConfig masterPreferences){
+	public Master(UUID playerUUID, AbilityConfig masterPreferences, double wages){
 		masterUUID = playerUUID;
 		preferences = masterPreferences;
+		startingWage = wages;
 	}
 	
 	public Collection<Servant> getServants(){return servants.values();}
@@ -33,8 +35,8 @@ public class Master {
 			if(InfluenceAPI.isServant(masterUUID) && InfluenceAPI.checkIsMasterOrAboveMaster(playerUUID, masterUUID)) return false;
 		}
 		
-		if(preferences != null) servants.put(playerUUID, new Servant(playerUUID, masterUUID, preferences));
-		else servants.put(playerUUID, new Servant(playerUUID, masterUUID, new AbilityConfig(true)));
+		if(preferences != null) servants.put(playerUUID, new Servant(playerUUID, masterUUID, preferences, startingWage));
+		else servants.put(playerUUID, new Servant(playerUUID, masterUUID, new AbilityConfig(true), startingWage));
 		return true;
 	}
 	
@@ -67,6 +69,8 @@ public class Master {
 	public AbilityConfig getPreferences(){
 		return preferences;
 	}
+	
+	public double getStartingWage(){return startingWage;}
 	
 	public UUID getPlayerUUID(){
 		return masterUUID;

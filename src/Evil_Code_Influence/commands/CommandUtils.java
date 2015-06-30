@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.Set;
 
 import net.ess3.api.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -18,6 +19,7 @@ import com.earth2me.essentials.api.UserDoesNotExistException;
 
 import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
+import Evil_Code_Influence.VaultHook;
 import Evil_Code_Influence.master.Master;
 import Evil_Code_Influence.servant.Servant;
 
@@ -41,9 +43,9 @@ public class CommandUtils {
 			
 			if(arg.equals("all") || arg.equals("@a") || arg.equals("@all")){
 				int maxDist = 0;
-				if(sender instanceof Player && arg.replace("@p", "").startsWith("[") && arg.endsWith("]")){
+				if(sender instanceof Player && arg.startsWith("@a[") && arg.endsWith("]")){
 					try{
-						maxDist = Integer.parseInt(arg.replace("@p[", "").replace("]", ""));
+						maxDist = Integer.parseInt(arg.replace("@a[", "").replace("]", ""));
 						if(maxDist < 0) maxDist *= -1 ;
 					}
 					catch(IllegalArgumentException ex){}
@@ -154,9 +156,9 @@ public class CommandUtils {
 				
 				if(arg.equals("all") || arg.equals("@a") || arg.equals("@all")){
 					int maxDist = 0;
-					if(sender instanceof Player && arg.replace("@p", "").startsWith("[") && arg.endsWith("]")){
+					if(sender instanceof Player && arg.startsWith("@a[") && arg.endsWith("]")){
 						try{
-							maxDist = Integer.parseInt(arg.replace("@p[", "").replace("]", ""));
+							maxDist = Integer.parseInt(arg.replace("@a[", "").replace("]", ""));
 							if(maxDist < 0) maxDist *= -1 ;
 						}
 						catch(IllegalArgumentException ex){}
@@ -272,9 +274,9 @@ public class CommandUtils {
 			
 			if(arg.equals("all") || arg.equals("@a") || arg.equals("@all")){
 				int maxDist = 0;
-				if(pSender != null && arg.replace("@p", "").startsWith("[") && arg.endsWith("]")){
+				if(pSender != null && arg.startsWith("@a[") && arg.endsWith("]")){
 					try{
-						maxDist = Integer.parseInt(arg.replace("@p[", "").replace("]", ""));
+						maxDist = Integer.parseInt(arg.replace("@a[", "").replace("]", ""));
 						if(maxDist < 0) maxDist *= -1 ;
 					}
 					catch(IllegalArgumentException ex){}
@@ -395,5 +397,32 @@ public class CommandUtils {
 			catch(NoLoanPermittedException e){return false;}catch(UserDoesNotExistException e){return false;}
 		}
 		return enough;
+	}
+	
+	public static boolean transferMoneyFromTo(OfflinePlayer p1, OfflinePlayer p2, double amount){
+		if(amount < 0){
+			OfflinePlayer temp = p1;
+			p1 = p2; p2 = temp;
+		}
+		
+		if(VaultHook.vaultEnabled()){
+			EconomyResponse r = VaultHook.econ.withdrawPlayer(p1, amount);
+			if(r.transactionSuccess() == false) return false;
+			
+			r = VaultHook.econ.depositPlayer(p2, amount);
+			if(r.transactionSuccess() == false){
+				VaultHook.econ.depositPlayer(p1, amount);
+				return false;
+			}
+				
+		}
+		else{
+			if(CommandUtils.editEssentialsBalance(p1, -amount) == false) return false;
+			if(CommandUtils.editEssentialsBalance(p2, amount) == false){
+				CommandUtils.editEssentialsBalance(p1, amount);
+				return false;
+			}
+		}
+		return true;
 	}
 }

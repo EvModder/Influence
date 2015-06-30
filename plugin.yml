@@ -1,6 +1,7 @@
 name: Influence
 main: Evil_Code_Influence.Influence
 version: 1.0
+softdepend: [Vault,Essentials]
 
 commands:
    influence:
@@ -66,6 +67,12 @@ commands:
       permission: influence.command.collect
       permission-message: You do not have permission to use this command
       
+   setwageservant:
+      description: Set the daily allowance your servant receives
+      usage: /i setwage <Name/all>
+      permission: influence.command.setwage
+      permission-message: You do not have permission to use this command
+      
    invseeservant:
       description: View a servant's inventory and/or edit its contents
       usage: /i invsee <Name>
@@ -116,6 +123,7 @@ permissions:
             influence.command.release.others: false
             influence.command.tp: true
             influence.command.tphere: true
+            influence.command.setwage: true
             influence.command.invsee: true
             influence.command.enderchest: false
         

@@ -47,7 +47,7 @@ public class CommandTphereServant implements CommandExecutor{
 			return true;
 		}
 		for(Player servant : targetP){
-			servant.sendMessage(Influence.prefix+" §cYou are being teleported by §7"+sender.getName()+"§c...");
+			servant.sendMessage(Influence.prefix+"§cYou are being teleported by §7"+sender.getName()+"§c...");
 			servant.teleport((Player)sender);
 		}
 		

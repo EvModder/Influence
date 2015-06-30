@@ -1,5 +1,9 @@
 package Evil_Code_Influence.commands;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,8 +13,10 @@ import Evil_Code_Influence.Influence;
 
 public class CommandHireServant implements CommandExecutor{
 	private Influence plugin;
+	private CommandManager cmdManager;
 	
-	public CommandHireServant(){
+	public CommandHireServant(CommandManager cmdManager){
+		this.cmdManager = cmdManager;
 		plugin = Influence.getPlugin();
 		plugin.getCommand("hireservant").setExecutor(this);
 	}
@@ -44,7 +50,16 @@ public class CommandHireServant implements CommandExecutor{
 		return true;
 	}
 	
-	public static void hireServant(Player employer, Player target, Double wage){
-		//TODO: Send message to target with offer
+	public void hireServant(Player employer, Player target, Double wage){
+		
+		Set<UUID> uuid = new HashSet<UUID>();
+		uuid.add(target.getUniqueId());
+		
+		if(cmdManager.addTradeOffer(new TradeOffer(employer, target, uuid, null, -wage))){//the price of become the servant is -wage
+			target.sendMessage(Influence.prefix +
+					" §7"+employer.getName()+CommandManager.msgC+" would like to offer you §a"+wage+CommandManager.msgC +
+					" in exchange for you becoming §7" +
+					employer.getName()+CommandManager.msgC+'\''+"§7s"+CommandManager.msgC+" servant.");
+		}
 	}
 }

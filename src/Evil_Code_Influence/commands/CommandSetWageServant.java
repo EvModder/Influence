@@ -1,7 +1,6 @@
 package Evil_Code_Influence.commands;
 
 import java.util.Set;
-import java.util.UUID;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -13,21 +12,22 @@ import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
 import Evil_Code_Influence.master.Master;
 
-public class CommandReleaseServant implements CommandExecutor{
+public class CommandSetWageServant implements CommandExecutor{
 	private Influence plugin;
 	
-	public CommandReleaseServant(){
+	public CommandSetWageServant(){
 		plugin = Influence.getPlugin();
-		plugin.getCommand("releaseservant").setExecutor(this);
+		plugin.getCommand("setwageservant").setExecutor(this);
 	}
 
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
-		//cmd:   /releaseservant <Name/all>
+		//cmd:   /setwageservant <Name/all>
 		if(args.length < 1){
 			sender.sendMessage("§cToo few arguments!");
 			return false;
 		}
+		
 		Set<OfflinePlayer> targetP;
 		if(sender instanceof Player){
 			OfflinePlayer p = plugin.getServer().getOfflinePlayer(args[0]);
@@ -35,6 +35,7 @@ public class CommandReleaseServant implements CommandExecutor{
 				sender.sendMessage("§cYou are not the master of "+p.getName());
 				return true;
 			}
+			
 			Master master = InfluenceAPI.getMasterByUUID(((Player)sender).getUniqueId());
 			if(master == null){
 				sender.sendMessage("§4ERROR: §cYou do not own any servants");
@@ -46,16 +47,20 @@ public class CommandReleaseServant implements CommandExecutor{
 		
 		if(targetP.isEmpty()){
 			sender.sendMessage("§cPlayer[Servant] not found!");
-			sender.sendMessage("§7Perhaps they have already been freed?");
 			return true;
 		}
 		
-		UUID masterUUID = (sender instanceof Player) ? ((Player)sender).getUniqueId() : null;
+		double newWage = 0;
+		try{newWage = Double.parseDouble(args[2]);}
+		catch(NumberFormatException ex){}
+		if(newWage < Influence.minWage()){
+			sender.sendMessage("§cInvalid wage! Number must be a positive value" +
+					((Influence.minWage() > 0) ? " above or equal to the minimum wage (§7"+Influence.minWage()+"§c)." : ""));
+			return false;
+		}
 		
-		for(OfflinePlayer servant : targetP){
-			InfluenceAPI.releaseServantFromMaster(servant.getUniqueId(), masterUUID);
-			sender.sendMessage(Influence.prefix+"§aYou have released §7"+servant.getName()+"§a from your service");
-			if(servant.isOnline()) servant.getPlayer().sendMessage(Influence.prefix+"§aYou have released!");
+		for(OfflinePlayer player : targetP){
+			InfluenceAPI.getServant(player.getUniqueId()).setWage(newWage);
 		}
 		
 		return true;

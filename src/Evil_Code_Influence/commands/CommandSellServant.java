@@ -72,12 +72,13 @@ public class CommandSellServant implements CommandExecutor{
 	}
 	
 	public void sendSellServantRequest(CommandSender seller, Player buyer, OfflinePlayer servant, double salePrice){
-		buyer.sendMessage(Influence.prefix +
-				" §7"+seller.getName()+"§6 is offering to sell §7"+servant.getName()+"§6 to you as a servant.");
-		
 		Set<UUID> uuids = new HashSet<UUID>();
 		uuids.add(servant.getUniqueId());
-		cmdManager.addTradeOffer(new TradeOffer(seller, buyer, uuids, null, 0, salePrice));
+		
+		if(cmdManager.addTradeOffer(new TradeOffer(seller, buyer, uuids, null, salePrice))){
+			buyer.sendMessage(Influence.prefix+"§7"+seller.getName()+CommandManager.msgC+" is offering to sell §7"+servant.getName()+
+						CommandManager.msgC+" to you as a servant for the lump sum of §c"+salePrice+'$'+CommandManager.msgC+'.');
+		}
 	}
 	
 	public void sendSellServantsRequest(CommandSender seller, Player buyer, Set<OfflinePlayer> servants, double salePrice){
@@ -86,13 +87,13 @@ public class CommandSellServant implements CommandExecutor{
 		
 		for(OfflinePlayer servant : servants){
 			uuids.add(servant.getUniqueId());
-			servantNames.append(servant.getName()); servantNames.append("§6, §7");
+			servantNames.append(servant.getName()); servantNames.append(CommandManager.msgC+", §7");
 		}
 		
-		buyer.sendMessage(Influence.prefix +
-				" §7"+seller.getName()+"§6 is offering to sell you the following servants: §7" + 
-					servantNames.substring(0, servantNames.length()-6)+'.');
-		
-		cmdManager.addTradeOffer(new TradeOffer(seller, buyer, uuids, null, 0, salePrice));
+		if(cmdManager.addTradeOffer(new TradeOffer(seller, buyer, uuids, null, salePrice))){
+			buyer.sendMessage(Influence.prefix+"§7"+seller.getName()+CommandManager.msgC + 
+				" is offering to sell you the following servants: §7"+servantNames.substring(0, servantNames.length()-4) +
+				" for the lump sum of §c"+salePrice+'$'+CommandManager.msgC+'.');
+		}
 	}
 }

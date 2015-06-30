@@ -12,27 +12,29 @@ import Evil_Code_Influence.InfluenceAPI;
 public class TradeOffer {
 	final UUID sellerUUID, buyerUUID;
 	private Set<UUID> sellerServants, buyerServants;
-	private double sellerPrice, buyerPrice;
+	private double priceBuyerPays;
 	
 	public TradeOffer(CommandSender seller, Player buyer, Set<UUID> servantsForSale, Set<UUID> servantsToBuy,
-			double sellerOffer, double buyerOffer)
+			double priceBuyerPays)
 	{
 		sellerUUID = (seller instanceof Player) ? ((Player)seller).getUniqueId() : null;
 		buyerUUID = buyer.getUniqueId();
 		sellerServants = servantsForSale;
 		buyerServants = servantsToBuy;
-		sellerPrice = sellerOffer;
-		buyerPrice = buyerOffer;
+		this.priceBuyerPays = priceBuyerPays;//buyerOffer-sellerOffer;
 	}
 	
 	private void undoCarryOutOffer(){
 		Influence plugin = Influence.getPlugin();
-		if(sellerPrice != 0){
-			CommandUtils.editEssentialsBalance(plugin.getServer().getOfflinePlayer(buyerUUID), sellerPrice);
+		
+		if(CommandUtils.transferMoneyFromTo(plugin.getServer().getOfflinePlayer(buyerUUID),
+											plugin.getServer().getOfflinePlayer(sellerUUID), priceBuyerPays) == false)
+		{
+			plugin.getLogger().warning(Influence.prefix+"§cUnable to undo a sale offer between "+
+					plugin.getServer().getOfflinePlayer(buyerUUID).getName() + " and " +
+					plugin.getServer().getOfflinePlayer(sellerUUID) + '!');
 		}
-		if(buyerPrice != 0){
-			CommandUtils.editEssentialsBalance(plugin.getServer().getOfflinePlayer(sellerUUID), buyerPrice);
-		}
+		
 		if(sellerServants != null && sellerServants.isEmpty() == false){
 			for(UUID servant : sellerServants){
 				InfluenceAPI.releaseServantFromMaster(servant, buyerUUID);
@@ -50,15 +52,10 @@ public class TradeOffer {
 	public boolean carryOutOffer(){
 		Influence plugin = Influence.getPlugin();
 		
-		if(sellerPrice != 0){
-			if(CommandUtils.editEssentialsBalance(plugin.getServer().getOfflinePlayer(buyerUUID), -sellerPrice) == false) return false;
-		}
-		if(buyerPrice != 0){
-			if(CommandUtils.editEssentialsBalance(plugin.getServer().getOfflinePlayer(sellerUUID), -buyerPrice) == false){
-				//undo the last money exchange
-				if(sellerPrice != 0) CommandUtils.editEssentialsBalance(plugin.getServer().getOfflinePlayer(buyerUUID), sellerPrice);
-				return false;
-			}
+		if(CommandUtils.transferMoneyFromTo(plugin.getServer().getOfflinePlayer(buyerUUID),
+											plugin.getServer().getOfflinePlayer(sellerUUID), priceBuyerPays) == false)
+		{
+			return false;
 		}
 		
 		//=======================================================================================================

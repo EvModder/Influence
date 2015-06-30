@@ -57,7 +57,7 @@ public class CommandTradeServant implements CommandExecutor{
 		try{cashOffer = Double.parseDouble(args[2]);}
 		catch(NumberFormatException ex){noCashOffer = true;}
 		if(cashOffer < 0){
-			sender.sendMessage("§cInvalid cash offer! To charge a buyer, use the price variable");
+			sender.sendMessage("§cInvalid cash offer! To charge the buyer, use the price variable");
 			return false;
 		}
 		
@@ -96,6 +96,7 @@ public class CommandTradeServant implements CommandExecutor{
 			sender.sendMessage("§cInvalid price!");
 			return false;
 		}
+		double priceBuyerPays = price-cashOffer;
 		
 		// Send trade offer
 		StringBuilder sellerServantNames = new StringBuilder();
@@ -103,26 +104,26 @@ public class CommandTradeServant implements CommandExecutor{
 		
 		for(OfflinePlayer servant : sellerServants){
 			sellerServantUUIDS.add(servant.getUniqueId());
-			sellerServantNames.append(servant.getName()); sellerServantNames.append("§6, §7");
+			sellerServantNames.append(servant.getName()); sellerServantNames.append(CommandManager.msgC+", §7");
 		}
 		StringBuilder buyerServantNames = new StringBuilder();
 		Set<UUID> buyerServantUUIDS = new HashSet<UUID>();
 		
 		for(OfflinePlayer servant : buyerServants){
 			buyerServantUUIDS.add(servant.getUniqueId());
-			buyerServantNames.append(servant.getName()); buyerServantNames.append("§6, §7");
+			buyerServantNames.append(servant.getName()); buyerServantNames.append(CommandManager.msgC+", §7");
 		}
 		
-		pTo.sendMessage(Influence.prefix+" §7"+sender.getName()+"§6 is offering to trade their servant(s): " + 
-						sellerServantNames.substring(0, sellerServantNames.length()-6) +
-						((cashOffer != 0) ? "§6 and §c"+cashOffer+"$§6 out of their account" : "") +
-						"§6 for your servant(s): " +
-						buyerServantNames.substring(0, buyerServantNames.length()-6) +
-						((price != 0) ? "§6 and §c"+price+"$§6 out of your account." : "§6."));
+		price = price-cashOffer;
 		
-		sender.sendMessage(Influence.prefix+"§a Offer sent!");
-		
-		cmdManager.addTradeOffer(new TradeOffer(sender, pTo, sellerServantUUIDS, buyerServantUUIDS, cashOffer, price));
+		if(cmdManager.addTradeOffer(new TradeOffer(sender, pTo, sellerServantUUIDS, buyerServantUUIDS, priceBuyerPays))){
+			pTo.sendMessage(Influence.prefix+"§7"+sender.getName()+CommandManager.msgC+" is offering to trade their servant(s): " + 
+					sellerServantNames.substring(0, sellerServantNames.length()-4) +
+					((cashOffer != 0) ? " and §c"+cashOffer+'$'+CommandManager.msgC+" out of their account" : "") +
+					" for your servant(s): " +
+					buyerServantNames.substring(0, buyerServantNames.length()-4) +
+					((price != 0) ? " and §c"+price+'$'+CommandManager.msgC+" out of your account." : '.'));
+		}
 		return true;
 	}
 }

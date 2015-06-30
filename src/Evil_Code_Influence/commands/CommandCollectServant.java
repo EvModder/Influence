@@ -75,8 +75,9 @@ public class CommandCollectServant implements CommandExecutor{
 		//NOTE: 'all' should not collect sub-servants, as stated in command description in plugin.yml
 		for(Player servant : targetP){
 			type.collect(servant, (Player)sender);
-			servant.sendMessage(Influence.prefix+" §6Your §c"+type.toString()+"§6 has/have been collected by §7"+sender.getName()+"§6.");
-			sender.sendMessage(Influence.prefix+" §aCollected all §7"+type.toString()+"§a from §7"+servant.getName()+"§a.");
+			servant.sendMessage(Influence.prefix+CommandManager.msgC+"Your §c"+type.toString()+CommandManager.msgC + 
+					" has/have been collected by §7"+sender.getName()+CommandManager.msgC+'.');
+			sender.sendMessage(Influence.prefix+"§aCollected all §7"+type.toString()+"§a from §7"+servant.getName()+"§a.");
 		}
 		
 		return true;
@@ -137,10 +138,11 @@ public class CommandCollectServant implements CommandExecutor{
 			Master newMaster = InfluenceAPI.getMasterByUUID(master.getUniqueId());
 			for(Servant s : servantMaster.getServants()){
 				if(newMaster.addServant(s.getPlayerUUID(), false) == false){
-					master.sendMessage(Influence.prefix+" §cUnable to collect S:§7"+
-							plugin.getServer().getOfflinePlayer(s.getPlayerUUID()).getName()+
+					String unaddable = plugin.getServer().getOfflinePlayer(s.getPlayerUUID()).getName();
+					
+					master.sendMessage(Influence.prefix+" §cUnable to collect S:§7"+unaddable+
 							"§c from S:§7"+servant.getName()+"§c.");
-					master.sendMessage("§cThe servant has escaped from bondage!");
+					master.sendMessage("§cThe servant (§7"+unaddable+"§c) has escaped from bondage!");
 				}
 			}
 			InfluenceAPI.freeAllServantsFromMaster(servant.getUniqueId());

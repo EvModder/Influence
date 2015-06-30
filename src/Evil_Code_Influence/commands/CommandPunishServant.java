@@ -61,13 +61,13 @@ public class CommandPunishServant implements CommandExecutor{
 		}
 		
 		for(Player servant : targetP){
-			sender.sendMessage(Influence.prefix+" §7"+servant.getName()+"§6 has been punished!");
+			sender.sendMessage(Influence.prefix+"§7"+servant.getName()+CommandManager.msgC+" has been punished.");
 			
 			servant.setHealth(servant.getHealth()-damage);
 //			EntityDamageEvent event = new EntityDamageEvent(servant, DamageCause.BLOCK_EXPLOSION, damage);
 //			plugin.getServer().getPluginManager().callEvent(event);
 			
-			servant.sendMessage(Influence.prefix+" §4You have been punished!");
+			servant.sendMessage(Influence.prefix+"§4You have been punished!");
 		}
 		
 		return true;

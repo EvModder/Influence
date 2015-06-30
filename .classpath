@@ -8,5 +8,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Nate/Documents/Uncategorized Documents/Backup/AlternateCraft/plugins/Essentials.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Nate/Documents/Uncategorized Documents/Backup/MC Plugins/Vault.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

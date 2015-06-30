@@ -1,0 +1,133 @@
+name: Influence
+main: Evil_Code_Influence.Influence
+version: 1.0
+
+commands:
+   influence:
+      description: Displays the Influence plugin command menu
+      usage: /i help <#>
+      aliases: [infl,inf,ifl,influ,i,s,servitude,slavemasters]
+      permission: influence.command
+      permission-message: You do not have permission to use this command
+   
+   releaseservant:
+      description: Release a servant from bondage
+      usage: /i release <Name/all>
+      aliases: [free-servant,release-servant,freeservant]
+      permission: influence.command.release
+      permission-message: You do not have permission to use this command
+      
+   giveservant:
+      description: Give a servant to another player
+      usage: /i give <Name/all> to <Name>
+      aliases: [give-servant]
+      permission: influence.command.give
+      permission-message: You do not have permission to use this command
+      
+   sellservant:
+      description: Offer to trade a servant for the specified sum
+      usage: /i sell <Name/all> to <Name> for <$>
+      permission: influence.command.sell
+      permission-message: You do not have permission to use this command
+      
+   tradeservant:
+      description: Offer to trade a servant you own for another servant
+      usage: /i trade <Name/all> to <Name> for <Name/all> <[Optional:$]>
+      permission: influence.command.trade
+      permission-message: You do not have permission to use this command
+      
+   tpservant:
+      description: Teleport to a servant you own
+      usage: /i tp <Name>
+      permission: influence.command.tp
+      permission-message: You do not have permission to use this command
+      
+   tphereservant:
+      description: Teleport a servant you own to yourself
+      usage: /i tphere <Name/all>
+      permission: influence.command.tphere
+      permission-message: You do not have permission to use this command
+      
+   hireservant:
+      description: Offer a sum of cash in return for someone's service
+      usage: /i hire <Name> <$>
+      permission: influence.command.hire
+      permission-message: You do not have permission to use this command
+      
+   punishservant:
+      description: Punish a servant by damaging their health a specified amount
+      usage: /i punish <Name/all> <#amt>
+      permission: influence.command.punish
+      permission-message: You do not have permission to use this command
+      
+   collectservant:
+      description: Collect items or experience from a servant. NOTE- 'all' does not collect sub-servants
+      usage: /i collect <Name/all> <items/xp/servants/all>
+      permission: influence.command.collect
+      permission-message: You do not have permission to use this command
+      
+   invseeservant:
+      description: View a servant's inventory and/or edit its contents
+      usage: /i invsee <Name>
+      permission: influence.command.invsee
+      permission-message: You do not have permission to use this command
+      
+   enderchestservant:
+      description: View a servant's enderchest and/or edit its contents
+      usage: /i enderchest <Name>
+      permission: influence.command.enderchest
+      permission-message: You do not have permission to use this command
+      
+   influencegui:
+      description: Open up the AbilityGUI menu to manage Servant perms
+      usage: /i gui <Name/default>
+      permission: influence.command.gui
+      permission-message: You do not have permission to use this command
+
+permissions:
+   influence.command:
+        description: Permission to use /influence
+        default: true
+        
+   influence.command.reload:
+        description: Permission to reload the plugin
+        default: op
+        
+   influence.invsee.exempt:
+        description: Prevents other players from viewing your inventory
+        default: op
+        
+   influence.enderchest.exempt:
+        description: Prevents other players from viewing your enderchest
+        default: true
+        
+   influence.master:
+        description: Permission to own servants
+        default: true
+        children:
+            influence.command.gui: true
+            influence.command.sell: true
+            influence.command.give: true
+            influence.command.trade: true
+            influence.command.hire: true
+            influence.command.collect: true
+            influence.command.punish: true
+            influence.command.release: true
+            influence.command.release.others: false
+            influence.command.tp: true
+            influence.command.tphere: true
+            influence.command.invsee: true
+            influence.command.enderchest: false
+        
+   influence.servant:
+        description: Permission to be a servant
+        default: true
+        
+   influence.servant.override.*:
+        description: Override control while in servitude
+        default: op
+        children:
+            influence.servant.override.commands: true
+            influence.servant.override.breakblocks: true
+            influence.servant.override.placeblocks: true
+            influence.servant.override.emptybucket: true

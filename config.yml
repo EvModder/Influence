@@ -1,0 +1,34 @@
+#Note, only supports EssentialsEco as of yet for economy features.  Will be adding comprehensive support in the upcoming bukkit release.
+
+MaxServantTime: 7d
+CanFreeHired: true
+FreedHiredGetsPartPay: true
+MinWage: 0
+MaxServants: 0 #0 for no limit
+AllowServantsToOwnServants: true
+
+# Put a hash mark before an ability to make it always allowed
+MasterCanRestrict:
+   - breakblocks
+   - placeblocks
+   - emptybucket
+#  - interacblock
+   - interactentity
+   - attack
+   - attackmonster
+   - attackanimal
+   - attackplayer
+   - attackmaster
+   - ridemob
+   - usechests
+   - teleport
+   - ownservants
+#  - commands
+   - enter_bed
+   
+# List of what items a master is allowed to collect from a servant
+MasterCanCollect:
+   - items
+   - armor
+   - xp
+   - servants

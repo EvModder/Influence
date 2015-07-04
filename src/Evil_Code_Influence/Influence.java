@@ -27,7 +27,7 @@ import Evil_Code_Influence.servant.AbilityConfig.Ability;
 public final class Influence extends JavaPlugin{
 	private static Influence plugin;
 	private ConfigSettings config;
-	public final static String prefix = "§8[§2Ifl§8]§f ";
+	public final static String prefix = "Â§8[Â§2IflÂ§8]Â§f ";
 	private static double MIN_WAGE;
 	protected Map<UUID, Master> masterList = new HashMap<UUID, Master>();
 	final int projectID=0;//= ???; TODO: Need to find this out when uploaded to bukkit.com!

@@ -414,7 +414,6 @@ public class CommandUtils {
 				VaultHook.econ.depositPlayer(p1, amount);
 				return false;
 			}
-				
 		}
 		else{
 			if(CommandUtils.editEssentialsBalance(p1, -amount) == false) return false;

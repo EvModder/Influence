@@ -37,6 +37,10 @@ public class CommandHireServant implements CommandExecutor{
 			sender.sendMessage("§cPlayer not found!");
 			return false;
 		}
+		if(p.getName().equals(sender.getName())){
+			sender.sendMessage("§cYou cannot hire yourself");
+			return false;
+		}
 		double wage;
 		try{wage = Double.parseDouble(args[1]);}
 		catch(NumberFormatException e){

@@ -49,6 +49,7 @@ public final class Influence extends JavaPlugin{
 		
 		loadFiles();
 		new InfluenceAPI();
+		new VaultHook(this);
 		registerCommands();
 		if(!masterList.isEmpty()) registerEvents();
 	}

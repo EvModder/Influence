@@ -17,7 +17,7 @@ import Evil_Code_Influence.servant.Servant;
 import Evil_Code_Influence.servant.AbilityConfig.Ability;
 
 public class InfluenceAPI {
-	static Influence plugin;
+	private static Influence plugin;
 	
 	public InfluenceAPI(){
 		plugin = Influence.getPlugin();

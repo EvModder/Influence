@@ -43,7 +43,7 @@ public class CommandManager implements TabExecutor{
 		
 		//TODO: make config!
 		offerTimer = plugin.getConfig().getInt("path/to/setting");
-		msgC = ChatColor.getByChar(plugin.getConfig().getString("path/to/setting").replace("&", ""));
+		msgC = ChatColor.GRAY;//ChatColor.getByChar(plugin.getConfig().getString("path/to/setting").replace("&", ""));
 		pendingTrades = new HashMap<Long, TradeOffer>();
 		
 		give = new CommandGiveServant();
@@ -82,7 +82,7 @@ public class CommandManager implements TabExecutor{
 			for(String name : plugin.getDescription().getCommands().keySet()){
 				Command cmd = plugin.getCommand(name);
 				if(sender.hasPermission(cmd.getPermission())){
-					sender.sendMessage("§8 - §7 "+cmd.getUsage()+"§f");//  -  "+cmd.getDescription());
+					sender.sendMessage("§8 - §7 "+cmd.getUsage());//+"§f  -  "+cmd.getDescription());
 				}
 			}
 			sender.sendMessage("§"+randColor()+"+ §7§m--------------------§b §"+randColor()+'+');

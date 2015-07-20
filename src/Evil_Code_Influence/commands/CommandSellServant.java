@@ -58,6 +58,10 @@ public class CommandSellServant implements CommandExecutor{
 			sender.sendMessage("§cPlayer[To] not found!");
 			return false;
 		}
+		if(pTo.getName().equals(sender.getName())){
+			sender.sendMessage("§cYou already own this servant");
+			return false;
+		}
 		double price;
 		try{price = Double.parseDouble(args[4]);}
 		catch(NumberFormatException ex){

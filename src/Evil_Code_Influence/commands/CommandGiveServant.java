@@ -56,6 +56,11 @@ public class CommandGiveServant implements CommandExecutor{
 			return false;
 		}
 		
+		if(pTo.getName().equals(sender.getName())){
+			sender.sendMessage("§cYou already own this servant");
+			return false;
+		}
+		
 		for(OfflinePlayer player : targetP){
 			boolean success = giveServant(sender, pTo, player);
 			if(success) sender.sendMessage("§aYou gave S:§7"+player.getName()+"§a to §7"+pTo.getName());

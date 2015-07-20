@@ -15,9 +15,11 @@ public class VaultHook {
 	
 	public VaultHook(Plugin plugin){
 		if(!setupEconomy(plugin)) plugin.getLogger().warning("Vault not found, falling back to EssentialsEco as economy base");
-		else vaultEnabled = true;
-		setupPermissions(plugin);
-		setupChat(plugin);
+		else{
+			vaultEnabled = true;
+			setupPermissions(plugin);
+			setupChat(plugin);
+		}
 	}
 	
 	private boolean setupEconomy(Plugin plugin) {

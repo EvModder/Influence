@@ -14,7 +14,14 @@ public class VaultHook {
 	public static Chat chat = null;
 	
 	public VaultHook(Plugin plugin){
-		if(!setupEconomy(plugin)) plugin.getLogger().warning("Vault not found, falling back to EssentialsEco as economy base");
+		if(!setupEconomy(plugin)){
+			if(plugin.getServer().getPluginManager().getPlugin("Essentials") == null){
+				plugin.getLogger().warning("Unable to connect to Vault or EssentialsEco economies");
+			}
+			else{// Removed to reduce spam
+//				plugin.getLogger().info("Vault not found, using EssentialsEco as economy base");
+			}
+		}
 		else{
 			vaultEnabled = true;
 			setupPermissions(plugin);

@@ -114,45 +114,46 @@ public class CommandManager implements TabExecutor{
 			"§58§8. /s tp [name] §6--§8 Teleport yourself to a slave\n" +
 			"§59§8. /s perms [name] §6--§8 See what permissions a slave of yours has\n" +
 			"§510§8./s gather-all [name] §6-- §8 Collect a slave's inv. (Make sure you have room in yours)\n" + */
+			return true;
 		}
 		else if(cmdName.equals("gui")){
-			gui.onCommand(sender, command, label, args);//TODO: basically everything
+			return gui.onCommand(sender, command, label, args);//TODO: basically everything
 		}
 		else if(cmdName.equals("release")){
-			release.onCommand(sender, command, label, args);// DONE!
+			return release.onCommand(sender, command, label, args);// DONE!
 		}
 		else if(cmdName.equals("tp")){
-			tp.onCommand(sender, command, label, args);// DONE!
+			return tp.onCommand(sender, command, label, args);// DONE!
 		}
 		else if(cmdName.equals("tphere")){
-			tphere.onCommand(sender, command, label, args);// DONE!
+			return tphere.onCommand(sender, command, label, args);// DONE!
 		}
 		else if(cmdName.equals("give")){
-			give.onCommand(sender, command, label, args);// DONE!
+			return give.onCommand(sender, command, label, args);// DONE!
 		}
 		else if(cmdName.equals("sell")){
-			sell.onCommand(sender, command, label, args);//TODO: finish sellServant() method - Done but needs testing
+			return sell.onCommand(sender, command, label, args);//TODO: finish sellServant() method - Done but needs testing
 		}
 		else if(cmdName.equals("trade")){
-			trade.onCommand(sender, command, label, args);//TODO: write tradeServant() method - Done but needs testing
+			return trade.onCommand(sender, command, label, args);//TODO: write tradeServant() method - Done but needs testing
 		}
 		else if(cmdName.equals("hire")){
-			hire.onCommand(sender, command, label, args);// DONE! - Done but needs testing
+			return hire.onCommand(sender, command, label, args);// DONE! - Done but needs testing
 		}
 		else if(cmdName.equals("punish")){
-			punish.onCommand(sender, command, label, args);// DONE!
+			return punish.onCommand(sender, command, label, args);// DONE!
 		}
 		else if(cmdName.equals("collect")){
-			collect.onCommand(sender, command, label, args);// DONE! - Done but needs testing
+			return collect.onCommand(sender, command, label, args);// DONE! - Done but needs testing
 		}
 		else if(cmdName.equals("setwage")){
-			setWage.onCommand(sender, command, label, args);// DONE! - Done but needs testing
+			return setWage.onCommand(sender, command, label, args);// DONE! - Done but needs testing
 		}
 		else if(cmdName.equals("invsee")){
-			invsee.onCommand(sender, command, label, args);// DONE! - Done but needs testing
+			return invsee.onCommand(sender, command, label, args);// DONE! - Done but needs testing
 		}
 		else if(cmdName.equals("enderchest")){
-			enderchest.onCommand(sender, command, label, args);// DONE! - Done but needs testing
+			return enderchest.onCommand(sender, command, label, args);// DONE! - Done but needs testing
 		}
 		// Player only commands beyond this point
 		else if(sender instanceof Player == false){
@@ -182,6 +183,7 @@ public class CommandManager implements TabExecutor{
 					break;
 				}
 			}
+			return true;
 		}
 		else if(cmdName.equals("deny")){//TODO: add "/i deny" for trade/sell deal expunging - Done but needs testing
 			UUID senderUUID = ((Player)sender).getUniqueId();
@@ -199,9 +201,9 @@ public class CommandManager implements TabExecutor{
 					break;
 				}
 			}
+			return true;
 		}
 		else return false;
-		return true;
 	}
 	
 	// You can ignore everything below this point.
@@ -210,7 +212,7 @@ public class CommandManager implements TabExecutor{
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 		if(args.length == 0 || args.length == 1){
 			List<String> completions = new ArrayList<String>();
-			for(String cmd : plugin.getDescription().getCommands().keySet()) completions.add(cmd);
+			for(String cmd : plugin.getDescription().getCommands().keySet()) completions.add(cmd.replace("servant", ""));
 			//
 			List<String> possibleCompletions = TabCompletionHelper.getPossibleCompletionsForGivenArgs(args, completions);
 			

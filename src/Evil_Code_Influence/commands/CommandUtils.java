@@ -391,7 +391,7 @@ public class CommandUtils {
 			// take money
 			try{
 				if(amount > 0) Economy.add(p.getName(), new BigDecimal(amount));
-				else Economy.substract(p.getName(), new BigDecimal(-amount));
+				else Economy.substract(p.getName(), new BigDecimal(-amount));//add -sign to make neg value positive
 			}
 			// returns false if it encounters an error
 			catch(NoLoanPermittedException e){return false;}catch(UserDoesNotExistException e){return false;}

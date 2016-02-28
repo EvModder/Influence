@@ -7,7 +7,7 @@ commands:
    influence:
       description: Displays the Influence plugin command menu
       usage: /i help <#>
-      aliases: [infl,inf,ifl,influ,i,s,servitude,slavemasters]
+      aliases: [infl,inf,ifl,influ,s,servitude,slavemasters]
       permission: influence.command
       permission-message: You do not have permission to use this command
    

@@ -49,9 +49,12 @@ public class InfluenceAPI {
 	}
 	
 	public static boolean addServant(UUID masterUUID, UUID servantUUID){
-		if(isServant(masterUUID) &&
-				(checkIsMasterOrAboveMaster(servantUUID, masterUUID) ||
+		if(isServant(masterUUID)){
+			if(plugin.getConfig().getBoolean("allow-servants-to-own-servants") == false) return false;
+			
+			if((checkIsMasterOrAboveMaster(servantUUID, masterUUID) ||
 				checkIfServantHasPermission(masterUUID, Ability.OWN_SERVANTS)) == false) return false;
+		}
 		
 		if(plugin.masterList.containsKey(masterUUID)){
 			plugin.masterList.get(masterUUID).addServant(servantUUID, false);

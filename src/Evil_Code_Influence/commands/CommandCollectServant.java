@@ -34,7 +34,7 @@ public class CommandCollectServant implements CommandExecutor{
 		plugin = Influence.getPlugin();
 		plugin.getCommand("collectservant").setExecutor(this);
 		
-		canCollect = plugin.getConfig().getStringList("MasterCanCollect").toString().toUpperCase();
+		canCollect = plugin.getConfig().getStringList("master-can-collect").toString().toUpperCase();
 	}
 
 	@SuppressWarnings("deprecation")

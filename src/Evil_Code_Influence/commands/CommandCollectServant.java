@@ -15,22 +15,26 @@ import Evil_Code_Influence.servant.Servant;
 public class CommandCollectServant implements CommandExecutor{
 	
 	private static Influence plugin;
+	private String canCollect;
 	public enum CollectType{
-		ITEMS(){public void collect(Player servant, Player master){collectItems(servant, master);}},
-		ARMOR(){public void collect(Player servant, Player master){collectArmor(servant, master);}},
-		XP(){public void collect(Player servant, Player master){collectXP(servant, master);}},
-		SERVANTS(){public void collect(Player servant, Player master){collectServants(servant, master);}},
-		ALL();
-		public void collect(Player servant, Player master){
-			if(plugin.getConfigSettings().isCollectTypeBlackListed(CollectType.ITEMS) == false) collectItems(servant, master);
-			if(plugin.getConfigSettings().isCollectTypeBlackListed(CollectType.ARMOR) == false) collectArmor(servant, master);
-			if(plugin.getConfigSettings().isCollectTypeBlackListed(CollectType.XP) == false) collectXP(servant, master);
-		}
+		ITEMS(){@Override public void collect(Player servant, Player master){collectItems(servant, master);}},
+		ARMOR(){@Override public void collect(Player servant, Player master){collectArmor(servant, master);}},
+		XP(){@Override public void collect(Player servant, Player master){collectXP(servant, master);}},
+		SERVANTS(){@Override public void collect(Player servant, Player master){collectServants(servant, master);}},
+		ALL(){@Override public void collect(Player servant, Player master){
+			collectItems(servant, master);
+			collectArmor(servant, master);
+			collectXP(servant, master);
+		}};
+		
+		public abstract void collect(Player servant, Player master);
 	};
 	
 	public CommandCollectServant(){
 		plugin = Influence.getPlugin();
 		plugin.getCommand("collectservant").setExecutor(this);
+		
+		canCollect = plugin.getConfig().getStringList("MasterCanCollect").toString().toUpperCase();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -60,15 +64,15 @@ public class CommandCollectServant implements CommandExecutor{
 			sender.sendMessage("§cPlayer not found!");
 			return true;
 		}
-		// I would use a switch(args[1].toLowerCase()) here, but the JRE 1.8 doesn't allow it :(
-		CollectType type = CollectType.ITEMS;
-		args[1] = args[1].toLowerCase();
-		if(args[1].equals("armor")) type = CollectType.ARMOR;
-		else if(args[1].equals("xp") || args[1].equals("experience")) type = CollectType.XP;
-		else if(args[1].equals("servants")) type = CollectType.SERVANTS;
-		else if(args[1].equals("all") || args[1].equals("a") || args[1].equals("@a")) type = CollectType.ALL;
+		args[1] = args[1].toUpperCase();
+		if(args[1].equals("A") || args[1].equals("@A")) args[1] = "ALL";
+		else if(args[1].startsWith("EXP")) args[1] = "XP";
 		
-		if(plugin.getConfigSettings().isCollectTypeBlackListed(type)){
+		CollectType type;
+		try{type = CollectType.valueOf(args[1]);}
+		catch(IllegalArgumentException  e){type=CollectType.ITEMS;}
+		
+		if(canCollect.contains(type.name())){
 			sender.sendMessage(Influence.prefix+"§c You do not have permission to collect §7"+type.name()+"§c.");
 			return true;
 		}
@@ -120,12 +124,11 @@ public class CommandCollectServant implements CommandExecutor{
 				master.getInventory().addItem(servant.getInventory().getItem(index));
 				servant.getInventory().setItem(index, null);
 			}
-			index++;
+			++index;
 		}
 	}
 	
 	public static void collectXP(Player servant, Player master){
-		master.sendMessage("debug message");
 		master.setTotalExperience(master.getTotalExperience()+servant.getTotalExperience());
 		servant.setTotalExperience(0);
 	}

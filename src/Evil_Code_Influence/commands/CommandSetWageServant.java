@@ -14,9 +14,11 @@ import Evil_Code_Influence.master.Master;
 
 public class CommandSetWageServant implements CommandExecutor{
 	private Influence plugin;
+	private Double MIN_WAGE;
 	
 	public CommandSetWageServant(){
 		plugin = Influence.getPlugin();
+		MIN_WAGE = plugin.getConfig().getDouble("MinDailyWage");
 		plugin.getCommand("setwageservant").setExecutor(this);
 	}
 
@@ -53,9 +55,9 @@ public class CommandSetWageServant implements CommandExecutor{
 		double newWage = 0;
 		try{newWage = Double.parseDouble(args[2]);}
 		catch(NumberFormatException ex){}
-		if(newWage < Influence.minWage()){
+		if(newWage < MIN_WAGE){
 			sender.sendMessage("§cInvalid wage! Number must be a positive value" +
-					((Influence.minWage() > 0) ? " above or equal to the minimum wage (§7"+Influence.minWage()+"§c)." : ""));
+					(MIN_WAGE > 0 ? " above or equal to the minimum wage (§7"+MIN_WAGE+"§c)." : ""));
 			return false;
 		}
 		

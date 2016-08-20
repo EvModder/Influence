@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 
 import net.ess3.api.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -340,7 +341,6 @@ public class CommandUtils {
 		return targets;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static Set<OfflinePlayer> getTargetServants(Master master, String arg, boolean includeOffline){
 		Set<OfflinePlayer> targets = new HashSet<OfflinePlayer>();
 		if(includeOffline == false){
@@ -348,12 +348,10 @@ public class CommandUtils {
 			return targets;
 		}
 		
-		OfflinePlayer p = plugin.getServer().getOfflinePlayer(arg);
-		if(p != null) if(master.hasServant(p.getUniqueId())) targets.add(p);
-		
 		List<OfflinePlayer> servants = new ArrayList<OfflinePlayer>();
-		for(OfflinePlayer player : plugin.getServer().getOfflinePlayers()){
-			if(master.hasServant(player.getUniqueId())) servants.add(player);
+		for(UUID servant : master.getServantUUIDs()){
+			OfflinePlayer player = plugin.getServer().getOfflinePlayer(servant);
+			if(player != null) servants.add(player);
 		}
 		
 		arg = arg.toLowerCase();

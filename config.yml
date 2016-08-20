@@ -1,36 +1,62 @@
-#Note, requires Vault to support all economies. Fallback economy is EssentialsEco, so if this is not your currency base it is suggested you install Vault
+# Note, requires Vault to support all economies.
+# Fallback economy is EssentialsEco, so if you do not use EssentialsEco
+# then you will need to install Vault to use economy integration
 
-MaxServantTime: 7d
-CanFreeHired: true
-FreedHiredGetsPartPay: true
-MinDailyWage: 0
-ContinuousWage: true # Daily wage is not given all at once, but steadily over time
+max-servitude-duration: 7d
+can-free-hired-servant: true
+early-released-hired-gets-partial-pay: true
+min-daily-wage: 0
 
-MaxServants: 0 #0 for no limit
-AllowServantsToOwnServants: true
+# Daily wage given steadily over time instead of at intervals
+continuous-wage: true
 
-# Put a hash mark before an ability to make it always allowed
-MasterCanRestrict:
-   - breakblocks
-   - placeblocks
-   - emptybucket
-#  - interacblock
-   - interactentity
-   - attack
-   - attackmonster
-   - attackanimal
-   - attackplayer
-   - attackmaster
-   - ridemob
-   - usechests
-   - teleport
-   - ownservants
-#  - commands
-   - enter_bed
+# 0 for no limit
+max-servants: 0
+allow-servants-to-own-servants: true
+
+# Put a hash mark before a permission to make it always allowed to servants
+master-can-restrict:
+   break_blocks
+   place_blocks
+   empty_bucket
+   enter_bed
+#  interact_entity
+#  interact_block
+   ride_mob
+   attack
+   attack_player
+   attack_animal
+   attack_monster
+   attack_master
+#  commands
+   own_servants
+   teleport
+   use_chests
+
+# Default permissions for slaves (these can be edited by masters)
+default-servant-permissions:
+   break_blocks: true
+   place_blocks: true
+   empty_bucket: true
+   enter_bed: true
+   interact_entity: true
+   interact_block: true
+   ride_mob: true
+   attack: true
+   attack_player: true
+   attack_animal: true
+   attack_monster: true
+   attack_master: false
+   commands: true
+   own_servants: false
+   teleport: true
+   use_chests: true
+   
    
 # List of what items a master is allowed to collect from a servant
-MasterCanCollect:
+master-can-collect:
    - items
    - armor
    - xp
    - servants
+   - all

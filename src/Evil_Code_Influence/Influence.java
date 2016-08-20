@@ -1,17 +1,15 @@
 package Evil_Code_Influence;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,37 +23,37 @@ import Evil_Code_Influence.servant.Servant;
 import Evil_Code_Influence.servant.AbilityConfig.Ability;
 
 public final class Influence extends JavaPlugin{
-	private static Influence plugin;
-	private ConfigSettings config;
-	public final static String prefix = "Â§8[Â§2IflÂ§8]Â§f ";
-	private static double MIN_WAGE;
+	private static Set<Ability> defaultPerms; public static Set<Ability> getDefaultAbilities(){return defaultPerms;}
+	private static Influence plugin; public static Influence getPlugin(){return plugin;}
+	private FileConfiguration config; @Override public FileConfiguration getConfig(){return config;}
+	
+	public final static String prefix = "§8[§2Ifl§8]§f ";
+	private double MIN_WAGE;
 	protected Map<UUID, Master> masterList = new HashMap<UUID, Master>();
-	final int projectID=0;//= ???; TODO: Need to find this out when uploaded to bukkit.com!
 	
 	@Override public void onEnable(){
-		getLogger().info("Loading " + getDescription().getFullName());
-		
-		//this= plugin instance
-		//projectID = bukkit id
-		//this.getFile() = the file to replace/update
-		//UpdateType = update type
-		//boolean = whether or not to log update progress %s to console
+		//projectID= ???; //Need to find this out when uploaded to bukkit.com!
+		//this= plugin instance, projectID= bukkit id, getFile()= file to replace/update, UpdateType= type, boolean= log progress %s
 		//TODO: upload to bukkit and then uncomment this
-//		new Updater(this, projectID, this.getFile(), Updater.UpdateType.DEFAULT, true);
+//		new Updater(this, projectID, getFile(), Updater.UpdateType.DEFAULT, true);
 		plugin = this;
-		config = new ConfigSettings(this);
+		config = FileIO.loadConfig(this, "config-influence.yml", getClass().getResourceAsStream("/config.yml"));
 		
-		MIN_WAGE = plugin.getConfig().getDouble("path/to/setting");//TODO: write config
+		MIN_WAGE = config.getDouble("min-daily-wage");
 		
-		loadFiles();
+		//Load default servant permissions
+		ConfigurationSection defaultPermSettings = config.getConfigurationSection("default-servant-permissions");
+		for(String setting : defaultPermSettings.getKeys(false))
+			if(defaultPermSettings.getBoolean(setting)) defaultPerms.add(Ability.valueOf(setting.toUpperCase()));
+		
+		loadMasterList();
 		new InfluenceAPI();
 		new VaultHook(this);
 		registerCommands();
 		if(!masterList.isEmpty()) registerEvents();
 	}
 	@Override public void onDisable(){
-//		for(Master master : masterList.values()) InfluenceAPI.saveMasterPreferences(master.getPlayerUUID(), master.getPreferences());
-		saveFiles();
+		saveMasterList();
 	}
 	
 	private void registerCommands(){
@@ -70,61 +68,38 @@ public final class Influence extends JavaPlugin{
 		HandlerList.unregisterAll(this);
 	}
 	
-	private void loadFiles(){
-//		getConfig().options().copyDefaults(true);
-		BufferedReader reader = null;
-		try{reader = new BufferedReader(new FileReader("./plugins/EvFolder/masters-servants.txt"));}
-		catch(FileNotFoundException e){
-			//Create Directory
-			File dir = new File("./plugins/EvFolder");
-			if(!dir.exists())dir.mkdir();
-			return;
-		}
+	private void loadMasterList(){
 		
-		String line = null;
+		//Load masters & servants file
+		String file = FileIO.loadFile("masters-servants.txt", "");
+		
 		Master master = null;
 		UUID mUUID=null, sUUID=null;
-		try{
-			while((line = reader.readLine()) != null){
+		if(!file.isEmpty()) try{
+			for(String line : file.split("\n")){
 				String[] lineData = line.replace(" ", "").toLowerCase().split("\\|");
+				
+				//if master
 				if(line.startsWith("m|")){
+					if(master != null) masterList.put(mUUID, master);//add previous master
 					
-					// In the event that the last master "scanned in" had no servants attributed to them
-					if(master != null){
-						if(master.getServants().size() == 0) InfluenceAPI.saveEmptyMasterPreferences(mUUID, master.getPreferences());
-						else masterList.put(mUUID, master);
-					}
-					
-					try{
-						mUUID = UUID.fromString(lineData[1]);
-					}catch(IllegalArgumentException ex1){
-						getLogger().warning("ERROR: Could not load the masterlist, please check the file for errors");
-						continue;
-					}
-					catch(ArrayIndexOutOfBoundsException ex2){
-						getLogger().warning("ERROR: Could not load the masterlist, please check the file for errors");
-						continue;
-					}
+					mUUID = UUID.fromString(lineData[1]);
 					
 					// If they have custom AbilityConfig preferences and/or starting wage for their servants,
 					// load it & add them with it
 					AbilityConfig preferences = null;
 					double wage = MIN_WAGE;
 					
-					for(int i=3; i<lineData.length; i++){
+					for(int i=3; i<lineData.length; ++i){
 						String data = lineData[i];
-						if(data.startsWith("perms{") && data.endsWith("}")){
-							data = ','+data.substring(data.indexOf("{")+1, data.indexOf("}"))+',';
-							
+						if(data.startsWith("perms{")){
 							preferences = new AbilityConfig(false);
-							for(Ability ability : AbilityConfig.Ability.values()){
-								preferences.setAbility(ability, data.contains(','+ability.name()+','));
+							for(String ability : data.substring(data.indexOf("{")+1, data.indexOf("}")).split(",")){
+								preferences.setAbility(Ability.valueOf(ability.toUpperCase()), true);
 							}
 						}
 						else if(data.startsWith("wage{") && data.endsWith("}")){
-							try{
-								wage = Double.parseDouble(data.substring(data.indexOf('{')+1, data.indexOf('}')));
-							}
+							try{wage = Double.parseDouble(data.substring(data.indexOf('{')+1, data.indexOf('}')));}
 							catch(NumberFormatException ex){
 								getLogger().warning("Unable to load number value for WAGE in masterlist");
 							}
@@ -132,68 +107,56 @@ public final class Influence extends JavaPlugin{
 					}
 					master = new Master(mUUID, preferences, wage);
 				}
+				//if servant
 				else if(master != null && line.startsWith("s|")){
-					sUUID = null;
-					try{
-						sUUID = UUID.fromString(lineData[1]);
-					}catch(IllegalArgumentException ex1){
-						getLogger().warning("ERROR: Could not load the masterlist, please check the file for errors");
-						continue;
-					}
-					catch(ArrayIndexOutOfBoundsException ex2){
-						getLogger().warning("ERROR: Could not load the masterlist, please check the file for errors");
-						continue;
-					}
+					sUUID = UUID.fromString(lineData[1]);
 					
 					if(lineData.length >= 3){
 						Servant servant = new Servant(sUUID, mUUID, master.getPreferences(), MIN_WAGE);
 						
-						for(int i=3; i<lineData.length; i++){
+						for(int i=3; i<lineData.length; ++i){
 							String data = lineData[i];
 							
-							if(data.startsWith("perms{") && data.endsWith("}")){
-								data = ','+data.substring(data.indexOf("{")+1, data.indexOf("}"))+',';
+							if(data.startsWith("perms{")){
+								data = ','+data.toLowerCase().substring(data.indexOf("{")+1, data.indexOf("}"))+',';
 								
 								for(Ability ability : AbilityConfig.Ability.values()){
 									servant.setAbility(ability, data.contains(','+ability.name()+','));
 								}
 							}
 							else if(data.startsWith("wage{") && data.endsWith("}")){
-								try{
-									double wage = Double.parseDouble(data.substring(data.indexOf('{')+1, data.indexOf('}')));
-									servant.setWage(wage);
-								}
+								try{servant.setWage(Double.parseDouble(data.substring(data.indexOf('{')+1, data.indexOf('}'))));}
 								catch(NumberFormatException ex){
 									getLogger().warning("Unable to load number value for WAGE in masterlist");
 								}
 							}
 						}
-						master.addServant(servant, true);//force=true to skip rank checking
+						master.addServant(servant.getPlayerUUID(), true);//force=true to skip rank checking
 					}
 					else master.addServant(sUUID, true);//force=true to skip rank checking
 				}
 			}
-			reader.close();
-			if(master != null){
-				if(master.getServants().size() == 0) InfluenceAPI.saveEmptyMasterPreferences(mUUID, master.getPreferences());
-				else masterList.put(mUUID, master);
-			}
 		}
-		catch(IOException e){}
-		getLogger().info("Enable complete!  ["+masterList.size()+"] master profiles loaded");
+		catch(IllegalArgumentException ex1){
+			getLogger().warning("ERROR: Could not load masterlist! Please check the file for errors (UUIDs)");
+		}
+		catch(ArrayIndexOutOfBoundsException ex2){
+			getLogger().warning("ERROR: Could not load masterlist! Please check the file for errors (missing values)");
+		}
+		getLogger().info("Enable complete! > ["+masterList.size()+"] master profiles loaded");
 	}
 	
-	private void saveFiles(){
+	private void saveMasterList(){
 		/** Example File:
 		 * 
 		 * MasterList:
 		 *    m|134534-143f1-134rf134|Setteal:
-		 *          s|134134-13414-134143-134143|FoofPuss
-		 *          s|q34134-13413-134543-3434f4|DiamondBlocks|perms{break_blocks,sleep,eat,attack}|wage{50}
-		 *          s|345345-asdgg-34f43f-ah34t3|pwu1|wage{25.50}
+		 *        s|134134-13414-134143-134143|FoofPuss
+		 *        s|q34134-13413-134543-3434f4|DiamondBlocks|perms{break_blocks,sleep,eat,attack}|wage{50}
+		 *        s|345345-asdgg-34f43f-ah34t3|pwu1|wage{25.50}
 		 *    
 		 *    m|asgg5g-5234v-34t53535|lekrosa|perms{place_blocks,break_blocks}:
-		 *          s|344334-34f4f-13g5hh-5234f4|Evil_Witchdoctor
+		 *        s|344334-34f4f-13g5hh-5234f4|Evil_Witchdoctor
 		 * 
 		*/
 		StringBuilder file = new StringBuilder("Master List: \n");
@@ -210,52 +173,49 @@ public final class Influence extends JavaPlugin{
 		
 		for(Master master : masters){
 			//Write master
-			file.append("  m|"); file.append(master.getPlayerUUID().toString());
-			file.append('|'); file.append(getServer().getOfflinePlayer(master.getPlayerUUID()).getName());
+			file.append("  m|").append(master.getPlayerUUID().toString())
+				.append('|').append(getServer().getOfflinePlayer(master.getPlayerUUID()).getName());
 			if(master.getPreferences() != null){
 //				// the uuid of the master and the abilities he/she allows servants to use by default
 //				 *  
 //				 *  134sdf-34f32-3fec3rc-fl35b{break_blocks,eat,sleep,teleport,attack_monsters,attack_animals}
 				file.append("|perms{");
-				boolean hasAny = false;
-				for(Ability ability : Ability.values()){
+				boolean notFirst = false;
+				for(Ability ability : master.getPreferences().getAbilities()){
 					if(master.getPreferences().hasAbility(ability)){
-						if(hasAny) file.append(',');
-						else hasAny = true;
+						if(notFirst) file.append(',');
+						else notFirst = true;
 						file.append(ability.name());
 					}
 				}
 				file.append('}');
 			}
 			if(master.getStartingWage() != MIN_WAGE){
-				file.append("|wage{");
-				file.append(String.valueOf(master.getStartingWage()));
-				file.append('}');
+				file.append("|wage{").append(String.valueOf(master.getStartingWage())).append('}');
 			}
 			
 			file.append(":\n");
 			
 			for(Servant servant : master.getServants()){
 				// Write servant
-				file.append("      s|"); file.append(servant.getPlayerUUID().toString());
-				file.append('|'); file.append(getServer().getOfflinePlayer(servant.getPlayerUUID()).getName());
+				file.append("      s|").append(servant.getPlayerUUID().toString())
+					.append('|').append(getServer().getOfflinePlayer(servant.getPlayerUUID()).getName());
 				
-				if(servant.getAbilityConfig().equals(master.getPreferences()) == false){
+				if((master.getPreferences() == null && !servant.getAbilityConfig().equals(new AbilityConfig(true)))
+						|| !servant.getAbilityConfig().equals(master.getPreferences())){
 					file.append("|perms{");
-					boolean hasAny = false;
+					boolean notFirst = false;
 					for(Ability ability : Ability.values()){
 						if(servant.getAbilityConfig().hasAbility(ability)){
-							if(hasAny) file.append(',');
-							else hasAny = true;
+							if(notFirst) file.append(',');
+							else notFirst = true;
 							file.append(ability.name());
 						}
 					}
 					file.append('}');
 				}
 				if(servant.getWage() != master.getStartingWage()){
-					file.append("|wage{");
-					file.append(String.valueOf(servant.getWage()));
-					file.append('}');
+					file.append("|wage{").append(String.valueOf(servant.getWage())).append('}');
 				}
 				file.append('\n');
 			}
@@ -264,33 +224,14 @@ public final class Influence extends JavaPlugin{
 		FileIO.saveFile("masters-servants.txt", file.toString());
 	}
 	
-	// Methods called by other classes
-	public boolean isServant(UUID playerUUID){
-		for(Master master : masterList.values()) if(master.hasServant(playerUUID)) return true;
-		return false;
-	}
-	
-	public Servant getServant(UUID playerUUID){
-		for(Master master : masterList.values()) if(master.hasServant(playerUUID)) return master.getServant(playerUUID);
-		return null;
-	}
-	
-	public boolean hasServants(UUID playerUUID){
-		return (masterList.containsKey(playerUUID) && masterList.get(playerUUID).getServants().size() > 0);
-	}
-	
-	public void addMaster(UUID masterUUID, Master master){
-		if(masterList.size() == 0) registerEvents();
+	// Methods called by InfluenceAPI
+	protected void addMaster(UUID masterUUID, Master master){
+		if(masterList.isEmpty()) registerEvents();
 		masterList.put(masterUUID, master);
 	}
 	
-	public void removeMaster(UUID masterUUID){
+	protected void removeMaster(UUID masterUUID){
 		masterList.remove(masterUUID);
-		if(masterList.size() == 0) unregisterEvents();
+		if(masterList.isEmpty()) unregisterEvents();
 	}
-	
-	public ConfigSettings getConfigSettings(){return config;}
-	
-	public static double minWage(){return MIN_WAGE;}
-	public static Influence getPlugin(){return plugin;}
 }

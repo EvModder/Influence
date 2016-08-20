@@ -85,6 +85,12 @@ commands:
       permission: influence.command.enderchest
       permission-message: You do not have permission to use this command
       
+   permsservant:
+      description: View or edit a servant's permissions
+      usage: /i perms <Name> <perm> <allow/deny>
+      permission: influence.command.perms
+      permission-message: You do not have permission to use this command
+      
    influencegui:
       description: Open up the AbilityGUI menu to manage Servant perms
       usage: /i gui <Name/default>
@@ -106,7 +112,7 @@ permissions:
         
    influence.enderchest.exempt:
         description: Prevents other players from viewing your enderchest
-        default: true
+        default: op
         
    influence.master:
         description: Permission to own servants
@@ -126,6 +132,7 @@ permissions:
             influence.command.setwage: true
             influence.command.invsee: true
             influence.command.enderchest: false
+            influence.command.perms: true
         
    influence.servant:
         description: Permission to be a servant

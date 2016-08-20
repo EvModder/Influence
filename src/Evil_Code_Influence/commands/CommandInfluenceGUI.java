@@ -1,5 +1,7 @@
 package Evil_Code_Influence.commands;
 
+import java.util.Set;
+
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -8,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
+import Evil_Code_Influence.master.Master;
 
 public class CommandInfluenceGUI implements CommandExecutor{
 	private Influence plugin;
@@ -20,6 +23,35 @@ public class CommandInfluenceGUI implements CommandExecutor{
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:   /influencegui <Name/default>
+		if(args.length < 1){
+			sender.sendMessage("§cToo few arguments!");
+			return false;
+		}
+		
+		Set<OfflinePlayer> targetP;
+		if(sender instanceof Player){
+			OfflinePlayer p = plugin.getServer().getOfflinePlayer(args[0]);
+			if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
+				sender.sendMessage("§cYou are not the master of "+p.getName());
+				return true;
+			}
+			
+			Master master = InfluenceAPI.getMasterByUUID(((Player)sender).getUniqueId());
+			if(master == null){
+				sender.sendMessage("§4ERROR: §cYou do not own any servants");
+				return true;
+			}
+			targetP = CommandUtils.getTargetServants(master, args[0], true);
+		}
+		else targetP = CommandUtils.getTargetServants(sender, args[0], true);
+		
+		if(targetP.isEmpty()){
+			sender.sendMessage("§cPlayer[Servant] not found!");
+			return true;
+		}
+		
+		
+		
 		if(sender instanceof Player == false){
 			sender.sendMessage("§cThis command can only be run by in-game players");
 			return true;

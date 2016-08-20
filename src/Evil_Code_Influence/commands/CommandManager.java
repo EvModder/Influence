@@ -73,7 +73,7 @@ public class CommandManager implements TabExecutor{
 			cmdName = args[0].toLowerCase().replace("servant", "").replace("influence", "");
 			String[] oldArgs = args;
 			args = new String[args.length-1];
-			for(int i=0; i<args.length; i++) args[i] = oldArgs[i+1];
+			for(int i=0; i<args.length; ++i) args[i] = oldArgs[i+1];
 		}
 		
 		if(cmdName.isEmpty() || cmdName.equals("?") || cmdName.equals("help")){

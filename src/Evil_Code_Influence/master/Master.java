@@ -3,8 +3,10 @@ package Evil_Code_Influence.master;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
+import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
 import Evil_Code_Influence.servant.AbilityConfig;
 import Evil_Code_Influence.servant.Servant;
@@ -15,8 +17,11 @@ public class Master {
 	private AbilityConfig preferences;//the default perms this master's servants get
 	private double startingWage;//the default wage this master's servants get
 	
-//	public Master(){
-//	}
+	public Master(UUID playerUUID){
+		masterUUID = playerUUID;
+		preferences = null;
+		startingWage = Influence.getPlugin().getConfig().getDouble("MinDailyWage");
+	}
 	
 	public Master(UUID playerUUID, AbilityConfig masterPreferences, double wages){
 		masterUUID = playerUUID;
@@ -24,7 +29,9 @@ public class Master {
 		startingWage = wages;
 	}
 	
+	public Set<UUID> getServantUUIDs(){return servants.keySet();}
 	public Collection<Servant> getServants(){return servants.values();}
+	public boolean hasServants(){return !servants.isEmpty();}
 	public boolean hasServant(UUID playerUUID){return servants.containsKey(playerUUID);}
 	
 	public boolean addServant(UUID playerUUID, boolean force){
@@ -40,6 +47,7 @@ public class Master {
 		return true;
 	}
 	
+	@Deprecated
 	public boolean addServant(Servant servant, boolean force){
 		if(force == false){
 			if(servants.containsValue(servant) || servant.getPlayerUUID().equals(masterUUID)) return false;

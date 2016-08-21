@@ -16,11 +16,10 @@ public class AbilityConfig {
 	private Set<Ability> abilities = new HashSet<Ability>();
 	
 	public AbilityConfig(boolean useDefaults){
-		if(useDefaults) abilities.addAll(Influence.getDefaultAbilities());
+		if(useDefaults) abilities.addAll(Influence.getDefaultAbilities().abilities);
 	}
 	
 	public AbilityConfig(Set<Ability> abilityList){
-		abilities.addAll(Influence.getDefaultAbilities());
 		abilities.addAll(abilityList);
 	}
 	
@@ -31,6 +30,11 @@ public class AbilityConfig {
 	
 	public boolean hasAbility(Ability ability){
 		return abilities.contains(ability);
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		return (obj instanceof AbilityConfig && ((AbilityConfig)obj).abilities.equals(abilities));
 	}
 	
 	public Set<Ability> getAbilities(){return abilities;}

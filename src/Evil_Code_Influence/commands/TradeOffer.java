@@ -27,10 +27,10 @@ public class TradeOffer {
 	private void undoCarryOutOffer(){
 		Influence plugin = Influence.getPlugin();
 		
-		if(CommandUtils.transferMoneyFromTo(plugin.getServer().getOfflinePlayer(buyerUUID),
-											plugin.getServer().getOfflinePlayer(sellerUUID), priceBuyerPays) == false)
+		if(CommandUtils.transferMoneyFromTo(plugin.getServer().getOfflinePlayer(sellerUUID),
+			plugin.getServer().getOfflinePlayer(buyerUUID), priceBuyerPays) == false)
 		{
-			plugin.getLogger().warning(CommandBase.prefix+"§cUnable to undo a sale offer between "+
+			plugin.getServer().getConsoleSender().sendMessage(CommandBase.prefix+"§cUnable to undo a sale offer between "+
 					plugin.getServer().getOfflinePlayer(buyerUUID).getName() + " and " +
 					plugin.getServer().getOfflinePlayer(sellerUUID) + '!');
 		}
@@ -53,7 +53,7 @@ public class TradeOffer {
 		Influence plugin = Influence.getPlugin();
 		
 		if(CommandUtils.transferMoneyFromTo(plugin.getServer().getOfflinePlayer(buyerUUID),
-											plugin.getServer().getOfflinePlayer(sellerUUID), priceBuyerPays) == false)
+			plugin.getServer().getOfflinePlayer(sellerUUID), priceBuyerPays) == false)
 		{
 			return false;
 		}
@@ -61,7 +61,7 @@ public class TradeOffer {
 		//=======================================================================================================
 		// Trade all/any involved servants.  If unable to trade a servant, undo the process and return false.
 		boolean undo = false;
-		if(sellerServants != null && sellerServants.isEmpty() == false){
+		if(sellerServants != null && !sellerServants.isEmpty()){
 			for(UUID servant : sellerServants){
 				InfluenceAPI.releaseServantFromMaster(servant, sellerUUID);
 				if(InfluenceAPI.addServant(buyerUUID, servant) == false){
@@ -71,7 +71,7 @@ public class TradeOffer {
 		}
 		if(undo) { undoCarryOutOffer(); return false; }
 		
-		if(buyerServants != null && buyerServants.isEmpty() == false){
+		if(buyerServants != null && !buyerServants.isEmpty()){
 			for(UUID servant : buyerServants){
 				InfluenceAPI.releaseServantFromMaster(servant, buyerUUID);
 				if(InfluenceAPI.addServant(sellerUUID, servant) == false){

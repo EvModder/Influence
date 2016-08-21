@@ -47,7 +47,7 @@ public class Master {
 		}
 		
 		if(preferences != null) servants.put(playerUUID, new Servant(playerUUID, masterUUID, preferences, startingWage));
-		else servants.put(playerUUID, new Servant(playerUUID, masterUUID, new AbilityConfig(true), startingWage));
+		else servants.put(playerUUID, new Servant(playerUUID, masterUUID, Influence.getDefaultAbilities(), startingWage));
 		return true;
 	}
 	
@@ -64,7 +64,7 @@ public class Master {
 	}
 	
 	public boolean removeServant(UUID playerUUID){
-		if(!servants.containsKey(playerUUID) || playerUUID == masterUUID) return false;
+		if(!servants.containsKey(playerUUID)) return false;
 		
 		else{
 			servants.remove(playerUUID);

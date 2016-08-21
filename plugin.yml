@@ -70,7 +70,7 @@ commands:
       
    permsservant:
       description: View or edit a servant's permissions
-      usage: /i perms <Name> <perm> <allow/deny>
+      usage: /i perms <Name/all> <perm> <allow/deny>
       aliases: [inflperm,inflperms]
       permission: influence.command.perms
       permission-message: You do not have permission to use this command

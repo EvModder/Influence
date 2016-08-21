@@ -3,8 +3,11 @@ package Evil_Code_Influence;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 import org.bukkit.entity.Player;
+
 import Evil_Code_Influence.master.Master;
+import Evil_Code_Influence.servant.AbilityConfig;
 import Evil_Code_Influence.servant.Servant;
 import Evil_Code_Influence.servant.AbilityConfig.Ability;
 
@@ -49,7 +52,8 @@ public class InfluenceAPI {
 	}
 	
 	public static boolean addServant(UUID masterUUID, UUID servantUUID){
-		if(isServant(masterUUID)){
+		if(masterUUID.equals(servantUUID)) return false;
+		else if(isServant(masterUUID)){
 			if(plugin.getConfig().getBoolean("allow-servants-to-own-servants") == false) return false;
 			
 			if((checkIsMasterOrAboveMaster(servantUUID, masterUUID) ||
@@ -57,18 +61,18 @@ public class InfluenceAPI {
 		}
 		
 		if(plugin.masterList.containsKey(masterUUID)){
-			plugin.masterList.get(masterUUID).addServant(servantUUID, false);
-			return plugin.masterList.get(masterUUID).hasServant(servantUUID);
+			plugin.masterList.get(masterUUID).addServant(servantUUID, true);
 		}
 		else{
 			Master master = new Master(masterUUID, null, plugin.MIN_WAGE);
 			master.addServant(servantUUID, true);
-			if(master.hasServant(servantUUID)){
-				plugin.addMaster(masterUUID, master);
-				return true;
-			}
-			else return false;
+			plugin.addMaster(masterUUID, master);
 		}
+		return true;
+	}
+	
+	public static void addServantlessMaster(UUID masterUUID, AbilityConfig prefs){
+		plugin.masterList.put(masterUUID, new Master(masterUUID, prefs, plugin.MIN_WAGE));
 	}
 	
 	public static void releaseServantFromMaster(UUID servantUUID, UUID masterUUID){
@@ -78,7 +82,6 @@ public class InfluenceAPI {
 			for(Master master : plugin.masterList.values()){
 				master.removeServant(servantUUID);
 				if(master.hasServants()){
-//					saveEmptyMasterPreferences(master.getPlayerUUID(), master.getPreferences());
 					if(master.getPreferences() == null) plugin.removeMaster(masterUUID);
 				}
 			}
@@ -90,7 +93,6 @@ public class InfluenceAPI {
 			
 			master.removeServant(servantUUID);
 			if(master.hasServants()){
-//				saveEmptyMasterPreferences(masterUUID, master.getPreferences());
 				if(master.getPreferences() == null) plugin.removeMaster(masterUUID);
 			}
 		}
@@ -127,6 +129,8 @@ public class InfluenceAPI {
 		
 		for(UUID servant : master.getServantUUIDs()){
 			if(servants.contains(servant)) continue;
+			servants.add(master.getServant(servant));
+			
 			if(plugin.masterList.containsKey(servant)){
 				servants.addAll(getAllServantsBelow(plugin.masterList.get(servant)));
 			}

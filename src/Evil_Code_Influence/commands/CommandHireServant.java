@@ -47,13 +47,12 @@ public class CommandHireServant extends CommandBase{
 		Set<UUID> uuid = new HashSet<UUID>();
 		uuid.add(target.getUniqueId());
 		
-		if(CommandInfluenceOffer.addTradeOffer(
-				new TradeOffer(employer, target, uuid, null, -wage))){//the price of becoming the servant is -wage
+		if(CommandInfluenceOffer.addTradeOffer(new TradeOffer(employer, target, null, uuid, -wage))){
 			
-			target.sendMessage(prefix +
-					"§7"+employer.getName()+msgC+" would like to offer you §a"+wage+msgC +
-					" in exchange for you becoming §7" +
-					employer.getName()+msgC+'\''+"§7s"+msgC+" servant.");
+			target.sendMessage(new StringBuilder(prefix).append("§7").append(employer.getName())
+					.append(msgC).append(" would like to offer you §a").append(wage)
+					.append(msgC).append(" in exchange for you becoming §7").append(employer.getName())
+					.append(msgC).append("'§7s").append(msgC).append(" servant.").toString());
 		}
 	}
 }

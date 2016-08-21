@@ -57,13 +57,13 @@ public class CommandTradeServant extends CommandBase{
 		//----------- Servants of other master ----------------------------------------------
 		Master master2 = InfluenceAPI.getMasterByUUID(pTo.getUniqueId());
 		if(master2 == null){
-			sender.sendMessage("§4ERROR: §cCounterpart (§7"+pTo.getName()+"§c) has no servants to trade for!");
+			sender.sendMessage("§4ERROR: §cPlayer (§7"+pTo.getName()+"§c) has no servants to trade for!");
 			return true;
 		}
 		
 		Set<OfflinePlayer> buyerServants = CommandUtils.getTargetServants(master2, (noCashOffer) ? args[4] : args[5], true);
 		if(buyerServants.isEmpty()){
-			sender.sendMessage("§cCounterpart (§7"+pTo.getName()+"§c) does not own the specified servant!");
+			sender.sendMessage("§cPlayer (§7"+pTo.getName()+"§c) does not own the specified servant!");
 			return true;
 		}
 		//-----------------------------------------------------------------------------------

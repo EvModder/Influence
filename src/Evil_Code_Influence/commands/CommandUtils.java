@@ -7,17 +7,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
-
 import net.ess3.api.Economy;
-import net.milkbowl.vault.economy.EconomyResponse;
-
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
-
 import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
 import Evil_Code_Influence.VaultHook;
@@ -261,14 +256,14 @@ public class CommandUtils {
 		Set<Player> targets = new HashSet<Player>();
 		
 		Player p = plugin.getServer().getPlayer(arg);
-		if(p != null) if(master.hasServant(p.getUniqueId())) targets.add(p);
+		if(p != null && master.hasServant(p.getUniqueId())) targets.add(p);
 		
-		else if(plugin.getServer().getOnlinePlayers().size() > 0){
+		else if(!plugin.getServer().getOnlinePlayers().isEmpty()){
 			List<Player> servantsOnline = new ArrayList<Player>();
 			for(Player player : plugin.getServer().getOnlinePlayers()){
 				if(master.hasServant(player.getUniqueId())) servantsOnline.add(player);
 			}
-			if(servantsOnline.size() == 0) return targets;
+			if(servantsOnline.isEmpty()) return targets;
 			
 			arg = arg.toLowerCase();
 			Player pSender = plugin.getServer().getPlayer(master.getPlayerUUID());// if NULL, then the sender is offline
@@ -385,35 +380,26 @@ public class CommandUtils {
 	}
 	
 	public static boolean editEssentialsBalance(OfflinePlayer p, double amount){
-		// check money
-		boolean enough;
-		try{enough = Economy.hasEnough(p.getName(), new BigDecimal(amount));}
-		catch(UserDoesNotExistException e){enough = false;}
-		
-		if(enough){
-			// take money
-			try{
-				if(amount > 0) Economy.add(p.getName(), new BigDecimal(amount));
-				else Economy.substract(p.getName(), new BigDecimal(-amount));//add -sign to make neg value positive
-			}
-			// returns false if it encounters an error
-			catch(NoLoanPermittedException e){return false;}catch(UserDoesNotExistException e){return false;}
+		try{
+			if(amount < 0) Economy.substract(p.getName(), new BigDecimal(-amount));
+			else Economy.add(p.getName(), new BigDecimal(amount));
+			return true;
 		}
-		return enough;
+		catch(NoLoanPermittedException e){return false;}
+		catch(UserDoesNotExistException e){return false;}
 	}
 	
 	public static boolean transferMoneyFromTo(OfflinePlayer p1, OfflinePlayer p2, double amount){
 		if(amount < 0){
 			OfflinePlayer temp = p1;
 			p1 = p2; p2 = temp;
+			amount *= -1;
 		}
 		
 		if(VaultHook.vaultEnabled()){
-			EconomyResponse r = VaultHook.econ.withdrawPlayer(p1, amount);
-			if(r.transactionSuccess() == false) return false;
+			if(VaultHook.econ.withdrawPlayer(p1, amount).transactionSuccess() == false) return false;
 			
-			r = VaultHook.econ.depositPlayer(p2, amount);
-			if(r.transactionSuccess() == false){
+			if(VaultHook.econ.depositPlayer(p2, amount).transactionSuccess() == false){
 				VaultHook.econ.depositPlayer(p1, amount);
 				return false;
 			}

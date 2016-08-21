@@ -2,6 +2,7 @@ package Evil_Code_Influence.servant;
 
 import java.util.UUID;
 
+import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.servant.AbilityConfig.Ability;
 
 public class Servant {
@@ -13,7 +14,7 @@ public class Servant {
 	public Servant(UUID servant, UUID master, AbilityConfig abilities, double wage){
 		servantUUID = servant;
 		ownerUUID = master;
-		abilityConfig = abilities == null ? new AbilityConfig(true) : abilities;
+		abilityConfig = abilities == null ? Influence.getDefaultAbilities() : abilities;
 		this.wage = wage;
 	}
 	

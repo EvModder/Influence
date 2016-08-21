@@ -93,8 +93,8 @@ public class CommandInfluenceOffer extends CommandBase{
 				Player seller = plugin.getServer().getPlayer(tradeOffer.sellerUUID);
 				Player buyer = plugin.getServer().getPlayer(tradeOffer.buyerUUID);
 				if(seller != null && buyer != null){
-					seller.sendMessage(prefix+"§7"+buyer.getName()
-							+"§c already has pending offers at this time, try again later");
+					seller.sendMessage(new StringBuilder(prefix).append("§7").append(buyer.getName())
+							.append("§c already has pending offers at this time, try again later").toString());
 				}
 				return false;
 			}
@@ -106,12 +106,16 @@ public class CommandInfluenceOffer extends CommandBase{
 		Player seller = plugin.getServer().getPlayer(tradeOffer.sellerUUID);
 		if(seller != null) seller.sendMessage(prefix+"§aOffer sent!");
 		
+//		Player buyer = plugin.getServer().getPlayer(tradeOffer.buyerUUID);
+//		if(buyer != null) buyer.sendMessage(
+//				prefix+"Type §2/i accept"+msgC+" to take this offer or §2/i deny"+msgC+" to reject it.\n"+
+//				prefix+"Offer expires in §c"+offerTimer+msgC+" seconds.");
 		final UUID buyerUUID = tradeOffer.buyerUUID;
 		new BukkitRunnable(){@Override public void run(){
 			Player buyer = plugin.getServer().getPlayer(buyerUUID);
 			if(buyer != null){
-				buyer.sendMessage(prefix+"Type §2/ifl accept"+msgC+" to accept this offer and §2/ifl deny"+msgC+" to deny it."+
-						" Offer expires in §c"+offerTimer+msgC+" seconds.");
+				buyer.sendMessage(prefix+"Type §2/i accept"+msgC+" to take this offer or §2/i deny"+msgC+" to reject it.\n"+
+								  prefix+"Offer expires in §c"+offerTimer+msgC+" seconds.");
 			}
 		}}.runTaskLater(plugin, 1);// 1 tick delay
 		

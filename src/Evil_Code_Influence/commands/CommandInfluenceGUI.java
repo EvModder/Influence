@@ -1,24 +1,14 @@
 package Evil_Code_Influence.commands;
 
 import java.util.Set;
-
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
 import Evil_Code_Influence.master.Master;
 
-public class CommandInfluenceGUI implements CommandExecutor{
-	private Influence plugin;
-	
-	public CommandInfluenceGUI(){
-		plugin = Influence.getPlugin();
-		plugin.getCommand("influencegui").setExecutor(this);
-	}
+public class CommandInfluenceGUI extends CommandBase{
 	
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
@@ -30,7 +20,7 @@ public class CommandInfluenceGUI implements CommandExecutor{
 		
 		Set<OfflinePlayer> targetP;
 		if(sender instanceof Player){
-			OfflinePlayer p = plugin.getServer().getOfflinePlayer(args[0]);
+			OfflinePlayer p = sender.getServer().getOfflinePlayer(args[0]);
 			if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
 				sender.sendMessage("§cYou are not the master of "+p.getName());
 				return true;
@@ -67,7 +57,7 @@ public class CommandInfluenceGUI implements CommandExecutor{
 		}
 		else{
 			//specific preferences
-			OfflinePlayer p = plugin.getServer().getOfflinePlayer(args[0]);
+			OfflinePlayer p = sender.getServer().getOfflinePlayer(args[0]);
 			if(p == null){
 				sender.sendMessage("§cPlayer not found!");
 				return false;

@@ -3,26 +3,14 @@ package Evil_Code_Influence.commands;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
 import Evil_Code_Influence.master.Master;
 
-public class CommandSellServant implements CommandExecutor{
-	private Influence plugin;
-	private CommandManager cmdManager;
-	
-	public CommandSellServant(CommandManager cmdManager){
-		this.cmdManager = cmdManager;
-		plugin = Influence.getPlugin();
-		plugin.getCommand("sellservant").setExecutor(this);
-	}
+public class CommandSellServant extends CommandBase{
 
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
@@ -34,7 +22,7 @@ public class CommandSellServant implements CommandExecutor{
 		
 		Set<OfflinePlayer> targetP;
 		if(sender instanceof Player){
-			OfflinePlayer p = plugin.getServer().getOfflinePlayer(args[0]);
+			OfflinePlayer p = sender.getServer().getOfflinePlayer(args[0]);
 			if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
 				sender.sendMessage("§cYou are not the master of "+p.getName());
 				return true;
@@ -53,7 +41,7 @@ public class CommandSellServant implements CommandExecutor{
 			sender.sendMessage("§cPlayer[Servant] not found!");
 			return true;
 		}
-		Player pTo = plugin.getServer().getPlayer(args[2]);
+		Player pTo = sender.getServer().getPlayer(args[2]);
 		if(pTo == null){
 			sender.sendMessage("§cPlayer[To] not found!");
 			return false;
@@ -71,7 +59,7 @@ public class CommandSellServant implements CommandExecutor{
 		if(targetP.size() == 1)sendSellServantRequest(sender, pTo, targetP.iterator().next(), price);
 		else sendSellServantsRequest(sender, pTo, targetP, price);
 		
-		sender.sendMessage(Influence.prefix+"§a Offer sent!");
+		sender.sendMessage(prefix+"§a Offer sent!");
 		return true;
 	}
 	
@@ -79,9 +67,9 @@ public class CommandSellServant implements CommandExecutor{
 		Set<UUID> uuids = new HashSet<UUID>();
 		uuids.add(servant.getUniqueId());
 		
-		if(cmdManager.addTradeOffer(new TradeOffer(seller, buyer, uuids, null, salePrice))){
-			buyer.sendMessage(Influence.prefix+"§7"+seller.getName()+CommandManager.msgC+" is offering to sell §7"+servant.getName()+
-						CommandManager.msgC+" to you as a servant for the lump sum of §c"+salePrice+'$'+CommandManager.msgC+'.');
+		if(CommandInfluenceOffer.addTradeOffer(new TradeOffer(seller, buyer, uuids, null, salePrice))){
+			buyer.sendMessage(prefix+"§7"+seller.getName()+msgC+" is offering to sell §7"+servant.getName()+
+						msgC+" to you as a servant for the lump sum of §c"+salePrice+'$'+msgC+'.');
 		}
 	}
 	
@@ -91,13 +79,13 @@ public class CommandSellServant implements CommandExecutor{
 		
 		for(OfflinePlayer servant : servants){
 			uuids.add(servant.getUniqueId());
-			servantNames.append(servant.getName()); servantNames.append(CommandManager.msgC+", §7");
+			servantNames.append(servant.getName()); servantNames.append(msgC+", §7");
 		}
 		
-		if(cmdManager.addTradeOffer(new TradeOffer(seller, buyer, uuids, null, salePrice))){
-			buyer.sendMessage(Influence.prefix+"§7"+seller.getName()+CommandManager.msgC + 
+		if(CommandInfluenceOffer.addTradeOffer(new TradeOffer(seller, buyer, uuids, null, salePrice))){
+			buyer.sendMessage(prefix+"§7"+seller.getName()+msgC + 
 				" is offering to sell you the following servants: §7"+servantNames.substring(0, servantNames.length()-4) +
-				" for the lump sum of §c"+salePrice+'$'+CommandManager.msgC+'.');
+				" for the lump sum of §c"+salePrice+'$'+msgC+'.');
 		}
 	}
 }

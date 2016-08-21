@@ -30,7 +30,7 @@ public class TradeOffer {
 		if(CommandUtils.transferMoneyFromTo(plugin.getServer().getOfflinePlayer(buyerUUID),
 											plugin.getServer().getOfflinePlayer(sellerUUID), priceBuyerPays) == false)
 		{
-			plugin.getLogger().warning(Influence.prefix+"§cUnable to undo a sale offer between "+
+			plugin.getLogger().warning(CommandBase.prefix+"§cUnable to undo a sale offer between "+
 					plugin.getServer().getOfflinePlayer(buyerUUID).getName() + " and " +
 					plugin.getServer().getOfflinePlayer(sellerUUID) + '!');
 		}

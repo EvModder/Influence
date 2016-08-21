@@ -27,7 +27,7 @@ public final class Influence extends JavaPlugin{
 	private static Influence plugin; public static Influence getPlugin(){return plugin;}
 	private FileConfiguration config; @Override public FileConfiguration getConfig(){return config;}
 	
-	public final static String prefix = "§8[§2Ifl§8]§f ";
+//	public final static String prefix = "§8[§2Ifl§8]§f ";
 	private double MIN_WAGE;
 	protected Map<UUID, Master> masterList = new HashMap<UUID, Master>();
 	
@@ -69,7 +69,6 @@ public final class Influence extends JavaPlugin{
 	}
 	
 	private void loadMasterList(){
-		
 		//Load masters & servants file
 		String file = FileIO.loadFile("masters-servants.txt", "");
 		

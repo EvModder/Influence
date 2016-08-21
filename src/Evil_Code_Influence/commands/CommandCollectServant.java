@@ -3,18 +3,14 @@ package Evil_Code_Influence.commands;
 import java.util.Set;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
 import Evil_Code_Influence.master.Master;
 import Evil_Code_Influence.servant.Servant;
 
-public class CommandCollectServant implements CommandExecutor{
-	
-	private static Influence plugin;
+public class CommandCollectServant extends CommandBase{
 	private String canCollect;
 	public enum CollectType{
 		ITEMS(){@Override public void collect(Player servant, Player master){collectItems(servant, master);}},
@@ -31,10 +27,7 @@ public class CommandCollectServant implements CommandExecutor{
 	};
 	
 	public CommandCollectServant(){
-		plugin = Influence.getPlugin();
-		plugin.getCommand("collectservant").setExecutor(this);
-		
-		canCollect = plugin.getConfig().getStringList("master-can-collect").toString().toUpperCase();
+		canCollect = Influence.getPlugin().getConfig().getStringList("master-can-collect").toString().toUpperCase();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -48,7 +41,7 @@ public class CommandCollectServant implements CommandExecutor{
 			sender.sendMessage("§cToo few arguments!");
 			return false;
 		}
-		Player p = plugin.getServer().getPlayer(args[0]);
+		Player p = sender.getServer().getPlayer(args[0]);
 		if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
 			sender.sendMessage("§cYou are not the master of "+p.getName());
 			return true;
@@ -73,15 +66,14 @@ public class CommandCollectServant implements CommandExecutor{
 		catch(IllegalArgumentException  e){type=CollectType.ITEMS;}
 		
 		if(canCollect.contains(type.name())){
-			sender.sendMessage(Influence.prefix+"§c You do not have permission to collect §7"+type.name()+"§c.");
+			sender.sendMessage(prefix+"§c You do not have permission to collect §7"+type.name()+"§c.");
 			return true;
 		}
 		//NOTE: 'all' should not collect sub-servants, as stated in command description in plugin.yml
 		for(Player servant : targetP){
 			type.collect(servant, (Player)sender);
-			servant.sendMessage(Influence.prefix+CommandManager.msgC+"Your §c"+type.toString()+CommandManager.msgC + 
-					" has/have been collected by §7"+sender.getName()+CommandManager.msgC+'.');
-			sender.sendMessage(Influence.prefix+"§aCollected all §7"+type.toString()+"§a from §7"+servant.getName()+"§a.");
+			servant.sendMessage(prefix+"Your §c"+type.toString()+msgC+" has/have been collected by §7"+sender.getName()+msgC+'.');
+			sender.sendMessage(prefix+"§aCollected all §7"+type.toString()+"§a from §7"+servant.getName()+"§a.");
 		}
 		
 		return true;
@@ -141,10 +133,9 @@ public class CommandCollectServant implements CommandExecutor{
 			Master newMaster = InfluenceAPI.getMasterByUUID(master.getUniqueId());
 			for(Servant s : servantMaster.getServants()){
 				if(newMaster.addServant(s.getPlayerUUID(), false) == false){
-					String unaddable = plugin.getServer().getOfflinePlayer(s.getPlayerUUID()).getName();
+					String unaddable = master.getServer().getOfflinePlayer(s.getPlayerUUID()).getName();
 					
-					master.sendMessage(Influence.prefix+" §cUnable to collect S:§7"+unaddable+
-							"§c from S:§7"+servant.getName()+"§c.");
+					master.sendMessage(prefix+" §cUnable to collect S:§7"+unaddable+"§c from S:§7"+servant.getName()+"§c.");
 					master.sendMessage("§cThe servant (§7"+unaddable+"§c) has escaped from bondage!");
 				}
 			}

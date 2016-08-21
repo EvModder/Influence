@@ -23,6 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
+import Evil_Code_Influence.commands.CommandBase;
 import Evil_Code_Influence.master.Master;
 import Evil_Code_Influence.servant.AbilityConfig.Ability;
 
@@ -128,7 +129,7 @@ public class Listener_PlayerAction implements Listener{
 	//
 	public boolean checkActionBlocked(Player player, Ability action){
 		if(InfluenceAPI.checkIfServantHasPermission(player, action) == false){
-			player.sendMessage(Influence.prefix+"§c Your current master does not allow you to use §7Ability:"+action.name()+"§c!");
+			player.sendMessage(CommandBase.prefix+"§c Your current master does not allow you to use §7Ability:"+action.name()+"§c!");
 			return true;
 		}
 		else return false;

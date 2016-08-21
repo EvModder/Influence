@@ -1,25 +1,19 @@
 package Evil_Code_Influence.commands;
 
 import java.util.Set;
-
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
 import Evil_Code_Influence.master.Master;
 
-public class CommandSetWageServant implements CommandExecutor{
-	private Influence plugin;
+public class CommandSetWageServant extends CommandBase{
 	private Double MIN_WAGE;
 	
 	public CommandSetWageServant(){
-		plugin = Influence.getPlugin();
-		MIN_WAGE = plugin.getConfig().getDouble("MinDailyWage");
-		plugin.getCommand("setwageservant").setExecutor(this);
+		MIN_WAGE = Influence.getPlugin().getConfig().getDouble("min-daily-wage");
 	}
 
 	@SuppressWarnings("deprecation")
@@ -32,7 +26,7 @@ public class CommandSetWageServant implements CommandExecutor{
 		
 		Set<OfflinePlayer> targetP;
 		if(sender instanceof Player){
-			OfflinePlayer p = plugin.getServer().getOfflinePlayer(args[0]);
+			OfflinePlayer p = sender.getServer().getOfflinePlayer(args[0]);
 			if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
 				sender.sendMessage("§cYou are not the master of "+p.getName());
 				return true;

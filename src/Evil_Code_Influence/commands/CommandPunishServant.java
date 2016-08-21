@@ -3,24 +3,12 @@ package Evil_Code_Influence.commands;
 import java.util.Set;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-
-import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
 import Evil_Code_Influence.master.Master;
 
-@SuppressWarnings("unused")
-public class CommandPunishServant implements CommandExecutor{
-	private Influence plugin;
-	
-	public CommandPunishServant(){
-		plugin = Influence.getPlugin();
-		plugin.getCommand("punishservant").setExecutor(this);
-	}
+public class CommandPunishServant extends CommandBase{
 
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
@@ -31,7 +19,7 @@ public class CommandPunishServant implements CommandExecutor{
 		}
 		Set<Player> targetP;
 		if(sender instanceof Player){
-			Player p = plugin.getServer().getPlayer(args[0]);
+			Player p = sender.getServer().getPlayer(args[0]);
 			if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
 				sender.sendMessage("§cYou are not the master of "+p.getName());
 				return true;
@@ -43,7 +31,7 @@ public class CommandPunishServant implements CommandExecutor{
 			}
 			targetP = CommandUtils.getTargetServants(master, args[0]);
 		}
-		else targetP = CommandUtils.getTargetPlayers(sender, args[0]);
+		else targetP = CommandUtils.getTargetServants(sender, args[0]);
 		
 		if(targetP.isEmpty()){
 			sender.sendMessage("§cPlayer not found!");
@@ -55,19 +43,18 @@ public class CommandPunishServant implements CommandExecutor{
 			sender.sendMessage("§cInvalid damage! Please enter a number between 1 and 20");
 			return false;
 		}
-		if(damage < 0 || damage > 10){
+		if(damage < 0 || damage > 20){
 			sender.sendMessage("§cInvalid damage amount! Please specify an amount between 1 and 20");
 			return false;
 		}
 		
 		for(Player servant : targetP){
-			sender.sendMessage(Influence.prefix+"§7"+servant.getName()+CommandManager.msgC+" has been punished.");
-			
 			servant.setHealth(servant.getHealth()-damage);
 //			EntityDamageEvent event = new EntityDamageEvent(servant, DamageCause.BLOCK_EXPLOSION, damage);
 //			plugin.getServer().getPluginManager().callEvent(event);
 			
-			servant.sendMessage(Influence.prefix+"§4You have been punished!");
+			sender.sendMessage(prefix+"§7"+servant.getName()+msgC+" has been punished.");
+			servant.sendMessage(prefix+"§4You have been punished!");
 		}
 		
 		return true;

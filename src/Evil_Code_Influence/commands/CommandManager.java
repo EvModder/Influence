@@ -1,71 +1,89 @@
 package Evil_Code_Influence.commands;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
+import java.util.Set;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import Evil_Code_Influence.Influence;
 
-public class CommandManager implements TabExecutor{
-	private Influence plugin;
-	private int offerTimer;//default in config is 120seconds
-	protected static ChatColor msgC;//TODO: replace all instances of §6 with defaultTradeColor //now msgC
-	private Map<Long, TradeOffer> pendingTrades;
+public class CommandManager extends CommandBase implements TabExecutor{
+	private static Influence plugin;
+	private static Map<String, Set<String>> prefixedCommands;
+	public static Map<String, Set<String>> getPluginCommands(){return prefixedCommands;}
 	
-	CommandGiveServant give;
-	CommandSellServant sell;
-	CommandTradeServant trade;
-	CommandHireServant hire;
-	CommandReleaseServant release;
-	CommandCollectServant collect;
-	CommandPunishServant punish;
-	CommandTpServant tp;
-	CommandTphereServant tphere;
-	CommandSetWageServant setWage;
-	CommandInvseeServant invsee;
-	CommandEnderchestServant enderchest;
-	CommandInfluenceGUI gui;
-
 	public CommandManager(){
 		plugin = Influence.getPlugin();
 		
-		//TODO: make config!
-		offerTimer = plugin.getConfig().getInt("path/to/setting");
-		msgC = ChatColor.GRAY;//ChatColor.getByChar(plugin.getConfig().getString("path/to/setting").replace("&", ""));
-		pendingTrades = new HashMap<Long, TradeOffer>();
-		
-		give = new CommandGiveServant();
-		sell = new CommandSellServant(this);
-		trade = new CommandTradeServant(this);
-		hire = new CommandHireServant(this);
-		release = new CommandReleaseServant();
-		collect = new CommandCollectServant();
-		punish = new CommandPunishServant();
-		tp = new CommandTpServant();
-		tphere = new CommandTphereServant();
-		setWage = new CommandSetWageServant();
-		invsee = new CommandInvseeServant();
-		enderchest = new CommandEnderchestServant();
-		gui = new CommandInfluenceGUI();
-//		for(String cmd : plugin.getDescription().getCommands().keySet()){
-//			plugin.getCommand(cmd).setExecutor(this);
-//		}
+		// Load a list of this plugin's commands
+		prefixedCommands = new HashMap<String, Set<String>>();
+		Map<String, Map<String, Object>> commands = plugin.getDescription().getCommands();
+		for(String cmdName : commands.keySet()){
+			if(cmdName.equals("influence")) continue;
+			
+			Set<String> aliases = new HashSet<String>();
+			
+			for(String alias : plugin.getCommand(cmdName).getAliases()){
+				aliases.add(alias.replace("servant", "").replace("influence", ""));
+			}
+			
+			prefixedCommands.put(cmdName, aliases);
+		}
+		plugin.getCommand("collectservant").setExecutor(new CommandCollectServant());
+		plugin.getCommand("enderchestservant").setExecutor(new CommandEnderchestServant());
+		plugin.getCommand("giveservant").setExecutor(new CommandGiveServant());
+		plugin.getCommand("hireservant").setExecutor(new CommandHireServant());
+		plugin.getCommand("influencegui").setExecutor(new CommandInfluenceGUI());
+		plugin.getCommand("influenceoffer").setExecutor(new CommandInfluenceOffer());
+		plugin.getCommand("invseeservant").setExecutor(new CommandInvseeServant());
+		plugin.getCommand("punishservant").setExecutor(new CommandPermsServant());
+		plugin.getCommand("releaseservant").setExecutor(new CommandPunishServant());
+		plugin.getCommand("sellservant").setExecutor(new CommandReleaseServant());
+		plugin.getCommand("setwageservant").setExecutor(new CommandSellServant());
+		plugin.getCommand("tphereservant").setExecutor(new CommandTphereServant());
+		plugin.getCommand("tpservant").setExecutor(new CommandTpServant());
+		plugin.getCommand("tradeservant").setExecutor(new CommandTradeServant());
 		plugin.getCommand("influence").setExecutor(this);
 	}
 	
 	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
+		if(args.length == 0 || args[0].equals("?")){
+			plugin.getCommand("influence").getExecutor().onCommand(sender, command, label, args);
+			return true;
+		}
+		args[0] = args[0].toLowerCase().replace("servant", "").replace("influence", "");
+		
+		PluginCommand cmd = getCommand(args[0]);
+		if(cmd != null){
+			String[] oldArgs = args;
+			args = new String[args.length-1];
+			for(int i=0; i<args.length; ++i) args[i] = oldArgs[i+1];
+
+			if(!cmd.getExecutor().onCommand(sender, cmd, oldArgs[0], args)){
+				sender.sendMessage(cmd.getUsage());
+			}
+		}
+		else sender.sendMessage(CommandBase.prefix+"Unknown command. Try §2/i ?"+CommandBase.msgC+" for Influence help");
+		return true;
+	}
+	
+	public static PluginCommand getCommand(String thisCmd){
+//		thisCmd = thisCmd.toLowerCase().replace("servant", "").replace("influence", "");
+		for(String cmdName : prefixedCommands.keySet()){
+			if(thisCmd.equals(cmdName) || prefixedCommands.get(cmdName).contains(thisCmd)){
+				return plugin.getCommand(cmdName);
+			}
+		}
+		return null;
+	}
+	
+/*	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
 		String cmdName="";
 		
@@ -90,30 +108,30 @@ public class CommandManager implements TabExecutor{
 			//
 			// The old version of /s help:
 			//
-			/*	sender.sendMessage(
-			"§8 - §2/§7i help <#>§f  -  Display this menu\n" +
-			"§8 - §2/§7i release <Name/all>§f  -  Release a servant from bondage\n" +
-			"§8 - §2/§7i give <Name/all> to <Name>§f  -  Give a servant to another player\n" +
-			"§8 - §2/§7i sell <Name/all> to <Name> for <$>§f  -  Offer to trade a servant for the specified sum\n" +
-			"§8 - §2/§7i trade <Name/all> for <Name/all> <$>§f  -  Offer to trade a servant you own for another servant\n" +
-			"§8 - §2/§7i hire <Name> <$>§f  -  Offer a sum of cash to someone in return for their service\n" +
-			"§8 - §2/§7i punish <Name/all> <#amt>§f  -  Punish a servant by damaging their health the specified amount\n" +
-			"§8 - §2/§7i collect <Name/all> <items/xp/all>§f  -  Collect items or experience from a servant" */
-			//
-			// The VERY OLD verstion of /s help (about 3.5 years old, completely irrelevant now after plugin rewrite):
-			//
-			/* 		"§8§l--- §7§o~ §6§o§lSlaveMaster Commands §7§o~ §8§l---\n" +
-			"§51§8. /s on/off §6--§8 Toggle the plugin on and off\n" +
-			"§52§8. /s grant [name] §6--§8 Grant a slave you own access to a command\n" +
-			"§7       (eg., '/s deny §abuild§7' '/s deny §aempty bucket§7' '/s deny §c/home§7')\n" +
-			"§53§8. /s deny  [name] §6--§8 Deny a slave you own access to a command\n" +
-			"§54§8. /s clearperms [name] §6--§8 Remove all access perms you have given to a slave\n" +
-			"§55§8. /s release [name] §6--§8 Release a slave from your service\n" +
-			"§56§8. /s give [name] to [name] §6--§8 Give away one of your slaves to someone else\n" +
-			"§57§8. /s tphere [name] §6--§8 Teleport a slave to yourself\n" +
-			"§58§8. /s tp [name] §6--§8 Teleport yourself to a slave\n" +
-			"§59§8. /s perms [name] §6--§8 See what permissions a slave of yours has\n" +
-			"§510§8./s gather-all [name] §6-- §8 Collect a slave's inv. (Make sure you have room in yours)\n" + */
+//			sender.sendMessage(
+//			"§8 - §2/§7i help <#>§f  -  Display this menu\n" +
+//			"§8 - §2/§7i release <Name/all>§f  -  Release a servant from bondage\n" +
+//			"§8 - §2/§7i give <Name/all> to <Name>§f  -  Give a servant to another player\n" +
+//			"§8 - §2/§7i sell <Name/all> to <Name> for <$>§f  -  Offer to trade a servant for the specified sum\n" +
+//			"§8 - §2/§7i trade <Name/all> for <Name/all> <$>§f  -  Offer to trade a servant you own for another servant\n" +
+//			"§8 - §2/§7i hire <Name> <$>§f  -  Offer a sum of cash to someone in return for their service\n" +
+//			"§8 - §2/§7i punish <Name/all> <#amt>§f  -  Punish a servant by damaging their health the specified amount\n" +
+//			"§8 - §2/§7i collect <Name/all> <items/xp/all>§f  -  Collect items or experience from a servant"
+//			//
+//			// The VERY OLD verstion of /s help (about 3.5 years old, completely irrelevant now after plugin rewrite):
+//			//
+//			"§8§l--- §7§o~ §6§o§lSlaveMaster Commands §7§o~ §8§l---\n" +
+//			"§51§8. /s on/off §6--§8 Toggle the plugin on and off\n" +
+//			"§52§8. /s grant [name] §6--§8 Grant a slave you own access to a command\n" +
+//			"§7       (eg., '/s deny §abuild§7' '/s deny §aempty bucket§7' '/s deny §c/home§7')\n" +
+//			"§53§8. /s deny  [name] §6--§8 Deny a slave you own access to a command\n" +
+//			"§54§8. /s clearperms [name] §6--§8 Remove all access perms you have given to a slave\n" +
+//			"§55§8. /s release [name] §6--§8 Release a slave from your service\n" +
+//			"§56§8. /s give [name] to [name] §6--§8 Give away one of your slaves to someone else\n" +
+//			"§57§8. /s tphere [name] §6--§8 Teleport a slave to yourself\n" +
+//			"§58§8. /s tp [name] §6--§8 Teleport yourself to a slave\n" +
+//			"§59§8. /s perms [name] §6--§8 See what permissions a slave of yours has\n" +
+//			"§510§8./s gather-all [name] §6-- §8 Collect a slave's inv. (Make sure you have room in yours)");
 			return true;
 		}
 		else if(cmdName.equals("gui")){
@@ -204,86 +222,22 @@ public class CommandManager implements TabExecutor{
 			return true;
 		}
 		else return false;
-	}
-	
-	// You can ignore everything below this point.
+	}*/
 	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-		if(args.length == 0 || args.length == 1){
+		if(args.length == 1){
 			List<String> completions = new ArrayList<String>();
-			for(String cmd : plugin.getDescription().getCommands().keySet()) completions.add(cmd.replace("servant", ""));
-			//
+			
+			for(String cmdName : prefixedCommands.keySet()){
+				completions.add(cmdName);
+				completions.addAll(prefixedCommands.get(cmdName));
+			}
+			
 			List<String> possibleCompletions = TabCompletionHelper.getPossibleCompletionsForGivenArgs(args, completions);
 			
-//			if(args[0].length() < 3 || possibleCompletions.isEmpty()){
-				return possibleCompletions;
-//			}
-//			// Just return the 1st item from the list.
-//			else possibleCompletions.subList(0, 1);
+			return possibleCompletions;
 		}
 		return null;
-	}
-	
-	private char randColor(){
-		String colors = "1239ab";
-		Random rand = new Random();
-		return colors.charAt(rand.nextInt(colors.length()));
-	}
-	
-	public boolean addTradeOffer(TradeOffer tradeOffer){
-		for(TradeOffer offer : pendingTrades.values()){
-			if(offer.buyerUUID.equals(tradeOffer.buyerUUID)){
-				Player seller = plugin.getServer().getPlayer(tradeOffer.sellerUUID);
-				Player buyer = plugin.getServer().getPlayer(tradeOffer.buyerUUID);
-				if(seller != null && buyer != null){
-					seller.sendMessage(Influence.prefix+" §7"+buyer.getName()
-							+"§c already has pending offers at this time, try again later");
-				}
-				return false;
-			}
-		}
-		
-		//put a timestamp on the offer. Once the offer has expired, it will be removed automatically.
-		pendingTrades.put(Calendar.getInstance().getTimeInMillis(), tradeOffer);
-		
-		Player seller = plugin.getServer().getPlayer(tradeOffer.sellerUUID);
-		if(seller != null) seller.sendMessage(Influence.prefix+"§a Offer sent!");
-		
-		final UUID buyerUUID = tradeOffer.buyerUUID;
-		new BukkitRunnable(){@Override public void run(){
-			Player buyer = plugin.getServer().getPlayer(buyerUUID);
-			if(buyer != null){
-				buyer.sendMessage(Influence.prefix +
-						msgC+" Type §2/ifl accept"+msgC+" to accept this offer and §2/ifl deny"+msgC+" to deny it."
-						+ " Offer expires in §c"+offerTimer+msgC+" seconds.");
-			}
-		}}.runTaskLater(plugin, 1);// 1 tick delay
-		
-		clearOffersLoop();
-		return true;
-	}
-	
-	boolean running = false;
-	private void clearOffersLoop(){
-		if(running) return;
-		running = true;
-		
-		new BukkitRunnable(){
-			@Override public void run(){
-				long currentTime = Calendar.getInstance().getTimeInMillis();
-				for(Long timeStamp : pendingTrades.keySet()){
-					if((currentTime - timeStamp)/1000 >= offerTimer) pendingTrades.remove(timeStamp);
-				}
-				if(!pendingTrades.isEmpty()){
-					running = false;
-					clearOffersLoop();
-				}
-			}
-		}.runTaskLater(plugin, 20);//20 ticks = 1 second
-	}
-	
-	public int getOfferTimer(){
-		return offerTimer;
 	}
 }

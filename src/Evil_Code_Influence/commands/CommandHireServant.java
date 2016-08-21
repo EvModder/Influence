@@ -3,23 +3,11 @@ package Evil_Code_Influence.commands;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import Evil_Code_Influence.Influence;
-
-public class CommandHireServant implements CommandExecutor{
-	private Influence plugin;
-	private CommandManager cmdManager;
-	
-	public CommandHireServant(CommandManager cmdManager){
-		this.cmdManager = cmdManager;
-		plugin = Influence.getPlugin();
-		plugin.getCommand("hireservant").setExecutor(this);
-	}
+public class CommandHireServant extends CommandBase{
 
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
@@ -32,7 +20,7 @@ public class CommandHireServant implements CommandExecutor{
 			sender.sendMessage("§cToo few arguments!");
 			return false;
 		}
-		Player p = plugin.getServer().getPlayer(args[0]);
+		Player p = sender.getServer().getPlayer(args[0]);
 		if(p == null){
 			sender.sendMessage("§cPlayer not found!");
 			return false;
@@ -59,11 +47,13 @@ public class CommandHireServant implements CommandExecutor{
 		Set<UUID> uuid = new HashSet<UUID>();
 		uuid.add(target.getUniqueId());
 		
-		if(cmdManager.addTradeOffer(new TradeOffer(employer, target, uuid, null, -wage))){//the price of become the servant is -wage
-			target.sendMessage(Influence.prefix +
-					" §7"+employer.getName()+CommandManager.msgC+" would like to offer you §a"+wage+CommandManager.msgC +
+		if(CommandInfluenceOffer.addTradeOffer(
+				new TradeOffer(employer, target, uuid, null, -wage))){//the price of becoming the servant is -wage
+			
+			target.sendMessage(prefix +
+					" §7"+employer.getName()+msgC+" would like to offer you §a"+wage+msgC +
 					" in exchange for you becoming §7" +
-					employer.getName()+CommandManager.msgC+'\''+"§7s"+CommandManager.msgC+" servant.");
+					employer.getName()+msgC+'\''+"§7s"+msgC+" servant.");
 		}
 	}
 }

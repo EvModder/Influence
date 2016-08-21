@@ -1,24 +1,14 @@
 package Evil_Code_Influence.commands;
 
 import java.util.Set;
-
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
 import Evil_Code_Influence.master.Master;
 
-public class CommandGiveServant implements CommandExecutor{
-	private Influence plugin;
-	
-	public CommandGiveServant(){
-		plugin = Influence.getPlugin();
-		plugin.getCommand("giveservant").setExecutor(this);
-	}
+public class CommandGiveServant extends CommandBase{
 
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
@@ -30,7 +20,7 @@ public class CommandGiveServant implements CommandExecutor{
 		
 		Set<OfflinePlayer> targetP;
 		if(sender instanceof Player){
-			OfflinePlayer p = plugin.getServer().getOfflinePlayer(args[0]);
+			OfflinePlayer p = sender.getServer().getOfflinePlayer(args[0]);
 			if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
 				sender.sendMessage("§cYou are not the master of "+p.getName());
 				return true;
@@ -50,7 +40,7 @@ public class CommandGiveServant implements CommandExecutor{
 			return true;
 		}
 		
-		OfflinePlayer pTo = plugin.getServer().getOfflinePlayer(args[2]);
+		OfflinePlayer pTo = sender.getServer().getOfflinePlayer(args[2]);
 		if(pTo == null || pTo.hasPlayedBefore()==false){
 			sender.sendMessage("§cPlayer[To] not found!");
 			return false;
@@ -75,13 +65,12 @@ public class CommandGiveServant implements CommandExecutor{
 		if(success){
 			if(employer.isOnline()){
 				employer.getPlayer().sendMessage(
-						Influence.prefix+"§7 "+sender.getName()+"§a gave S:§7"+servant.getName()+"§a to you as a servant!");
+						prefix+"§7"+sender.getName()+"§a gave S:§7"+servant.getName()+"§a to you as a servant!");
 //				employer.getPlayer().sendMessage(Influence.prefix+"§7 "+servant.getName()+"§a is now your servant!");
 			}
 			if(servant.isOnline()){
 				servant.getPlayer().sendMessage(
-						Influence.prefix+"§7 "+sender.getName()+CommandManager.msgC+" gave you as a servant to §7"+employer.getName()
-						+ CommandManager.msgC+'.');
+						prefix+"§7"+sender.getName()+msgC+" gave you as a servant to §7"+employer.getName()+msgC+'.');
 			}
 		}
 		return success;

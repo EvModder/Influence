@@ -1,20 +1,11 @@
 package Evil_Code_Influence.commands;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
 
-public class CommandEnderchestServant implements CommandExecutor{
-	private Influence plugin;
-	
-	public CommandEnderchestServant(){
-		plugin = Influence.getPlugin();
-		plugin.getCommand("enderchestservant").setExecutor(this);
-	}
+public class CommandEnderchestServant extends CommandBase{
 	
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
@@ -24,7 +15,7 @@ public class CommandEnderchestServant implements CommandExecutor{
 			return true;
 		}
 		
-		Player p = plugin.getServer().getPlayer(args[0]);
+		Player p =sender.getServer().getPlayer(args[0]);
 		if(p == null){
 			sender.sendMessage("§cPlayer not found!");
 			return false;

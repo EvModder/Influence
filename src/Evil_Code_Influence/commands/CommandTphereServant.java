@@ -3,25 +3,16 @@ package Evil_Code_Influence.commands;
 import java.util.Set;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
 import Evil_Code_Influence.master.Master;
 
-public class CommandTphereServant implements CommandExecutor{
-	private Influence plugin;
-	
-	public CommandTphereServant(){
-		plugin = Influence.getPlugin();
-		plugin.getCommand("tphereservant").setExecutor(this);
-	}
+public class CommandTphereServant extends CommandBase{
 
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
-		//cmd:   /tphereservant <Name/all>
+		//cmd: /tphereservant <Name/all>
 		if(sender instanceof Player == false){
 			sender.sendMessage("§cThis command can only be run by in-game players");
 			return true;
@@ -30,7 +21,7 @@ public class CommandTphereServant implements CommandExecutor{
 			sender.sendMessage("§cToo few arguments!");
 			return false;
 		}
-		Player p = plugin.getServer().getPlayer(args[0]);
+		Player p = sender.getServer().getPlayer(args[0]);
 		if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
 			sender.sendMessage("§cYou are not the master of "+p.getName());
 			return true;
@@ -47,7 +38,7 @@ public class CommandTphereServant implements CommandExecutor{
 			return true;
 		}
 		for(Player servant : targetP){
-			servant.sendMessage(Influence.prefix+"§cYou are being teleported by §7"+sender.getName()+"§c...");
+			servant.sendMessage(prefix+"§cYou are being teleported by §7"+sender.getName()+"§c...");
 			servant.teleport((Player)sender);
 		}
 		

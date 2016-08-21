@@ -3,26 +3,15 @@ package Evil_Code_Influence.commands;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
 import Evil_Code_Influence.master.Master;
 
-public class CommandTradeServant implements CommandExecutor{
-	private Influence plugin;
-	private CommandManager cmdManager;
-	
-	public CommandTradeServant(CommandManager cmdManager){
-		this.cmdManager = cmdManager;
-		plugin = Influence.getPlugin();
-		plugin.getCommand("tradeservant").setExecutor(this);
-	}
+public class CommandTradeServant extends CommandBase{
 
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
@@ -36,7 +25,7 @@ public class CommandTradeServant implements CommandExecutor{
 			return false;
 		}
 		
-		Player p = plugin.getServer().getPlayer(args[0]);
+		Player p = Influence.getPlugin().getServer().getPlayer(args[0]);
 		if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
 			sender.sendMessage("§cYou are not the master of "+p.getName());
 			return true;
@@ -61,7 +50,7 @@ public class CommandTradeServant implements CommandExecutor{
 			return false;
 		}
 		
-		Player pTo = plugin.getServer().getPlayer((noCashOffer) ? args[2] : args[3]);
+		Player pTo = sender.getServer().getPlayer((noCashOffer) ? args[2] : args[3]);
 		if(pTo == null){
 			sender.sendMessage("§cPlayer[To] not found!");
 			return false;
@@ -104,25 +93,25 @@ public class CommandTradeServant implements CommandExecutor{
 		
 		for(OfflinePlayer servant : sellerServants){
 			sellerServantUUIDS.add(servant.getUniqueId());
-			sellerServantNames.append(servant.getName()); sellerServantNames.append(CommandManager.msgC+", §7");
+			sellerServantNames.append(servant.getName()); sellerServantNames.append(msgC+", §7");
 		}
 		StringBuilder buyerServantNames = new StringBuilder();
 		Set<UUID> buyerServantUUIDS = new HashSet<UUID>();
 		
 		for(OfflinePlayer servant : buyerServants){
 			buyerServantUUIDS.add(servant.getUniqueId());
-			buyerServantNames.append(servant.getName()); buyerServantNames.append(CommandManager.msgC+", §7");
+			buyerServantNames.append(servant.getName()); buyerServantNames.append(msgC+", §7");
 		}
 		
 		price = price-cashOffer;
 		
-		if(cmdManager.addTradeOffer(new TradeOffer(sender, pTo, sellerServantUUIDS, buyerServantUUIDS, priceBuyerPays))){
-			pTo.sendMessage(Influence.prefix+"§7"+sender.getName()+CommandManager.msgC+" is offering to trade their servant(s): " + 
+		if(CommandInfluenceOffer.addTradeOffer(new TradeOffer(sender, pTo, sellerServantUUIDS, buyerServantUUIDS, priceBuyerPays))){
+			pTo.sendMessage(prefix+"§7"+sender.getName()+msgC+" is offering to trade their servant(s): " + 
 					sellerServantNames.substring(0, sellerServantNames.length()-4) +
-					((cashOffer != 0) ? " and §c"+cashOffer+'$'+CommandManager.msgC+" out of their account" : "") +
+					((cashOffer != 0) ? " and §c"+cashOffer+'$'+msgC+" out of their account" : "") +
 					" for your servant(s): " +
 					buyerServantNames.substring(0, buyerServantNames.length()-4) +
-					((price != 0) ? " and §c"+price+'$'+CommandManager.msgC+" out of your account." : '.'));
+					((price != 0) ? " and §c"+price+'$'+msgC+" out of your account." : '.'));
 		}
 		return true;
 	}

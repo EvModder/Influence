@@ -7,6 +7,9 @@ can-free-hired-servant: true
 early-released-hired-gets-partial-pay: true
 min-daily-wage: 0
 
+# Time until a trade offer expires, in seconds
+trade-offer-timeout: 120
+
 # Daily wage given steadily over time instead of at intervals
 continuous-wage: true
 

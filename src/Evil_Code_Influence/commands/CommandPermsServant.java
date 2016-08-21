@@ -55,14 +55,17 @@ public class CommandPermsServant extends CommandBase{
 			for(Servant servant : targetS){
 				String servantName = sender.getServer().getOfflinePlayer(servant.getPlayerUUID()).getName();
 				
-				StringBuilder builder = new StringBuilder(prefix).append("§7")
-						.append(servantName).append(msgC).append("'s permissions:");
+//				StringBuilder builder = new StringBuilder(prefix).append("Showing §7")
+//						.append(servantName).append(msgC).append("'s permissions: \n");
+				StringBuilder builder = new StringBuilder(prefix).append("§7").append(servantName).append(msgC).append("> ");
 				
 				for(Ability ability : Ability.values()){
-					builder.append(prefix).append("§7").append(ability.name().toLowerCase().replace('_', '-')).append(msgC)
-						   .append(": ").append(servant.hasAbility(ability) ? "§aallowed" : "§cdenied").append(msgC).append(", ");
+//					builder.append("§7").append(ability.name().toLowerCase().replace('_', '-')).append(msgC)
+//						   .append(": ").append(servant.hasAbility(ability) ? "§aallowed" : "§cdenied").append(msgC).append(", ");
+					builder.append(servant.hasAbility(ability) ? "§a" : "§c").append(ability.name().toLowerCase()
+							.replace('_', '-')).append(msgC).append(", ");
 				}
-				sender.sendMessage(builder.substring(0, builder.length()-2));
+				sender.sendMessage(builder.substring(0, builder.length()-2)+'.');
 			}
 		}
 		else if(args.length == 2){

@@ -9,7 +9,7 @@ public class CommandTpServant extends CommandBase{
 	
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
-		//cmd:   /tpservant <Name>
+		//cmd: /i tp <Name>
 		if(sender instanceof Player == false){
 			sender.sendMessage("§cThis command can only be run by in-game players");
 			return true;

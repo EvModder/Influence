@@ -68,6 +68,13 @@ commands:
       permission: influence.command.invsee
       permission-message: You do not have permission to use this command
       
+   listservants:
+      description: View a list of all your current servants
+      usage: /i list
+      aliases: [listservant,lservant]
+      permission: influence.command.list
+      permission-message: You do not have permission to use this command
+      
    permsservant:
       description: View or edit a servant's permissions
       usage: /i perms <Name/all> <perm> <allow/deny>
@@ -154,6 +161,7 @@ permissions:
             influence.command.gui: true
             influence.command.offer: true
             influence.command.invsee: true
+            influence.command.list: true
             influence.command.perms: true
             influence.command.punish: true
             influence.command.release: true

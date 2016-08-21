@@ -62,7 +62,13 @@ public class CommandPermsServant extends CommandBase{
 						.append(prefix).append("§7").append(abilityName).append(msgC).append(" is now ")
 						.append(newValue ? "§aallowed" : "§cdenied").append(msgC).append('.').toString());
 				
-				if(master != null) master.getPreferences().setAbility(ability, newValue);
+				if(master != null){
+					if(master.getPreferences() != null) master.getPreferences().setAbility(ability, newValue);
+					else{
+						abilities.setAbility(ability, newValue);
+						master.setPreferences(abilities);
+					}
+				}
 				else if(sender instanceof Player){
 					abilities.setAbility(ability, newValue);
 					InfluenceAPI.addServantlessMaster(((Player)sender).getUniqueId(), abilities);

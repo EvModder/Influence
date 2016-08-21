@@ -1,11 +1,9 @@
 package Evil_Code_Influence;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
-
 import org.bukkit.entity.Player;
-
 import Evil_Code_Influence.master.Master;
 import Evil_Code_Influence.servant.AbilityConfig;
 import Evil_Code_Influence.servant.Servant;
@@ -124,8 +122,8 @@ public class InfluenceAPI {
 				servant.hasPermission("influence.servant.override."+action.name().toLowerCase().replace("_", "")));
 	}
 	
-	private static List<Servant> getAllServantsBelow(Master master){
-		List<Servant> servants = new ArrayList<Servant>();
+	private static Set<Servant> getAllServantsBelow(Master master){
+		Set<Servant> servants = new HashSet<Servant>();
 		
 		for(UUID servant : master.getServantUUIDs()){
 			if(servants.contains(servant)) continue;
@@ -138,15 +136,27 @@ public class InfluenceAPI {
 		return servants;
 	}
 	
-	public static List<Servant> getAllServants(){
-		List<Servant> servants = new ArrayList<Servant>();
+	public static Set<Servant> getAllServants(){
+		Set<Servant> servants = new HashSet<Servant>();
 		for(Master master : plugin.masterList.values()) servants.addAll(master.getServants());
 		return servants;
 	}
 	
-	public static List<UUID> getAllServantUUIDs(){
-		List<UUID> servants = new ArrayList<UUID>();
+	public static Set<UUID> getAllServantUUIDs(){
+		Set<UUID> servants = new HashSet<UUID>();
 		for(Master master : plugin.masterList.values()) servants.addAll(master.getServantUUIDs());
 		return servants;
+	}
+	
+	public static Set<Master> getAllMasters(){
+		Set<Master> masters = new HashSet<Master>();
+		masters.addAll(plugin.masterList.values());
+		return masters;
+	}
+	
+	public static Set<UUID> getAllMasterUUIDs(){
+		Set<UUID> masters = new HashSet<UUID>();
+		masters.addAll(plugin.masterList.keySet());
+		return masters;
 	}
 }

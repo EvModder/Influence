@@ -12,7 +12,7 @@ public class CommandTphereServant extends CommandBase{
 
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
-		//cmd: /tphereservant <Name/all>
+		//cmd: /i tphere <Name/all>
 		if(sender instanceof Player == false){
 			sender.sendMessage("§cThis command can only be run by in-game players");
 			return true;

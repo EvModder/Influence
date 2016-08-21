@@ -81,6 +81,9 @@ public class Master {
 	public AbilityConfig getPreferences(){
 		return preferences;
 	}
+	public void setPreferences(AbilityConfig newPrefs){
+		preferences = newPrefs;
+	}
 	
 	public double getStartingWage(){return startingWage;}
 	

@@ -19,22 +19,22 @@ allow-servants-to-own-servants: true
 
 # Put a hash mark before a permission to make it always allowed to servants
 master-can-restrict:
-   break_blocks
-   place_blocks
-   empty_bucket
-   enter_bed
-#  interact_entity
-#  interact_block
-   ride_mob
-   attack
-   attack_player
-   attack_animal
-   attack_monster
-   attack_master
-#  commands
-   own_servants
-   teleport
-   use_chests
+  - break_blocks
+  - place_blocks
+  - empty_bucket
+  - enter_bed
+# - interact_entity
+# - interact_block
+  - ride_mob
+  - attack
+  - attack_player
+  - attack_animal
+  - attack_monster
+  - attack_master
+# - commands
+  - own_servants
+  - teleport
+  - use_chests
 
 # Default permissions for slaves (these can be edited by masters)
 default-servant-permissions:

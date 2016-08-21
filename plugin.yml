@@ -15,99 +15,112 @@ commands:
    influencehelp:
       description: Influence help command
       usage: /i help <#>
-      aliases: [ihelp,iinfo,i?]
+      aliases: [inflhelp,inflinfo]
       permission: evp.influence.command.help
       permission-message: You do not have permission to do this.
    
    collectservant:
       description: Collect items or experience from a servant. NOTE- 'all' does not collect sub-servants
       usage: /i collect <Name/all> <items/xp/servants/all>
+      aliases: [inflcollect]
       permission: influence.command.collect
       permission-message: You do not have permission to use this command
       
    enderchestservant:
       description: View a servant's enderchest and/or edit its contents
       usage: /i enderchest <Name>
+      aliases: [inflenderchest,inflender]
       permission: influence.command.enderchest
       permission-message: You do not have permission to use this command
       
    giveservant:
       description: Give a servant to another player
       usage: /i give <Name/all> to <Name>
+      aliases: [inflgive]
       permission: influence.command.give
       permission-message: You do not have permission to use this command
       
    hireservant:
       description: Offer a sum of cash in return for someone's service
       usage: /i hire <Name> <$>
+      aliases: [inflhire]
       permission: influence.command.hire
       permission-message: You do not have permission to use this command
       
    influencegui:
       description: Open up the AbilityGUI menu to manage Servant perms
       usage: /i gui <Name/default>
+      aliases: [inflgui]
       permission: influence.command.gui
       permission-message: You do not have permission to use this command
       
    influenceoffer:
       description: Accept or reject an offer from another player
       usage: /i <accept/reject>
-      aliases: [influenceaccept, influencereject,influencedeny]
+      aliases: [infloffer,inflaccept, inflreject,infldeny]
       permission: influence.command.offer
       permission-message: You do not have permission to use this command
       
    invseeservant:
       description: View a servant's inventory and/or edit its contents
       usage: /i invsee <Name>
+      aliases: [inflinvsee]
       permission: influence.command.invsee
       permission-message: You do not have permission to use this command
       
    permsservant:
       description: View or edit a servant's permissions
       usage: /i perms <Name> <perm> <allow/deny>
+      aliases: [inflperm,inflperms]
       permission: influence.command.perms
       permission-message: You do not have permission to use this command
       
    punishservant:
       description: Punish a servant by damaging their health a specified amount
       usage: /i punish <Name/all> <#amt>
+      aliases: [inflpunish,infldamage,inflhurt]
       permission: influence.command.punish
       permission-message: You do not have permission to use this command
       
    sellservant:
       description: Offer to trade a servant for the specified sum
       usage: /i sell <Name/all> to <Name> for <$>
+      aliases: [inflsell]
       permission: influence.command.sell
       permission-message: You do not have permission to use this command
       
    setwageservant:
       description: Set the daily allowance your servant receives
       usage: /i setwage <Name/all>
+      aliases: [inflsetwage,inflwage]
       permission: influence.command.setwage
       permission-message: You do not have permission to use this command
       
    releaseservant:
       description: Release a servant from bondage
       usage: /i release <Name/all>
-      aliases: [freeservant]
+      aliases: [freeservant,inflrelease]
       permission: influence.command.release
       permission-message: You do not have permission to use this command
       
    tphereservant:
       description: Teleport a servant you own to yourself
       usage: /i tphere <Name/all>
+      aliases: [infltphere]
       permission: influence.command.tphere
       permission-message: You do not have permission to use this command
       
    tpservant:
       description: Teleport to a servant you own
       usage: /i tp <Name>
+      aliases: [infltp]
       permission: influence.command.tp
       permission-message: You do not have permission to use this command
       
    tradeservant:
       description: Offer to trade a servant you own for another servant
       usage: /i trade <Name/all> to <Name> for <Name/all> <[Optional:$]>
+      aliases: [infltrade,inflbarter,inflswap]
       permission: influence.command.trade
       permission-message: You do not have permission to use this command
 

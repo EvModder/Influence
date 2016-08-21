@@ -29,7 +29,7 @@ public class CommandManager extends CommandBase implements TabExecutor{
 			Set<String> aliases = new HashSet<String>();
 			
 			for(String alias : plugin.getCommand(cmdName).getAliases()){
-				aliases.add(alias.replace("servant", "").replace("influence", ""));
+				aliases.add(alias.replace("infl", "").replace("servant", "").replace("influence", ""));
 			}
 			
 			prefixedCommands.put(cmdName, aliases);
@@ -37,6 +37,7 @@ public class CommandManager extends CommandBase implements TabExecutor{
 		plugin.getCommand("collectservant").setExecutor(new CommandCollectServant());
 		plugin.getCommand("enderchestservant").setExecutor(new CommandEnderchestServant());
 		plugin.getCommand("giveservant").setExecutor(new CommandGiveServant());
+		plugin.getCommand("influencehelp").setExecutor(new CommandInfluenceHelp());
 		plugin.getCommand("hireservant").setExecutor(new CommandHireServant());
 		plugin.getCommand("influencegui").setExecutor(new CommandInfluenceGUI());
 		plugin.getCommand("influenceoffer").setExecutor(new CommandInfluenceOffer());
@@ -54,10 +55,10 @@ public class CommandManager extends CommandBase implements TabExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
 		if(args.length == 0 || args[0].equals("?")){
-			plugin.getCommand("influence").getExecutor().onCommand(sender, command, label, args);
+			plugin.getCommand("influencehelp").getExecutor().onCommand(sender, command, label, args);
 			return true;
 		}
-		args[0] = args[0].toLowerCase().replace("servant", "").replace("influence", "");
+		args[0] = args[0].toLowerCase().replace("servant", "").replace("influence", "").replace("infl", "");
 		
 		PluginCommand cmd = getCommand(args[0]);
 		if(cmd != null){

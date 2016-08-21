@@ -3,6 +3,7 @@ package Evil_Code_Influence;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,6 +43,7 @@ public final class Influence extends JavaPlugin{
 		MIN_WAGE = config.getDouble("min-daily-wage");
 		
 		//Load default servant permissions
+		defaultPerms = new HashSet<Ability>();
 		ConfigurationSection defaultPermSettings = config.getConfigurationSection("default-servant-permissions");
 		for(String setting : defaultPermSettings.getKeys(false))
 			if(defaultPermSettings.getBoolean(setting)) defaultPerms.add(Ability.valueOf(setting.toUpperCase()));

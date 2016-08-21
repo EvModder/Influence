@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import Evil_Code_Influence.Influence;
 
-public class CommandHelp extends CommandBase{
+public class CommandInfluenceHelp extends CommandBase{
 	
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /i help <#>
@@ -20,7 +20,7 @@ public class CommandHelp extends CommandBase{
 		//grab plugin instance
 		Influence plugin = Influence.getPlugin();
 		
-		sender.sendMessage(new StringBuilder('§')
+		sender.sendMessage(new StringBuilder("§")
 		.append(randColor()).append("+ §7§m--------------------§b §").append(randColor()).append('+').toString());
 		
 		// Send help/info/commands
@@ -30,7 +30,7 @@ public class CommandHelp extends CommandBase{
 				sender.sendMessage("§8 - §7 "+cmd.getUsage());//+"§f  -  "+cmd.getDescription());
 			}
 		}
-		sender.sendMessage(new StringBuilder('§')
+		sender.sendMessage(new StringBuilder("§")
 		.append(randColor()).append("+ §7§m--------------------§b §").append(randColor()).append('+').toString());
 		return true;
 	}

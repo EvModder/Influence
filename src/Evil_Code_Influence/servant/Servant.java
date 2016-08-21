@@ -13,7 +13,7 @@ public class Servant {
 	public Servant(UUID servant, UUID master, AbilityConfig abilities, double wage){
 		servantUUID = servant;
 		ownerUUID = master;
-		abilityConfig = abilities;
+		abilityConfig = abilities == null ? new AbilityConfig(true) : abilities;
 		this.wage = wage;
 	}
 	

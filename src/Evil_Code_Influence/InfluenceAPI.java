@@ -61,8 +61,8 @@ public class InfluenceAPI {
 			return plugin.masterList.get(masterUUID).hasServant(servantUUID);
 		}
 		else{
-			Master master = new Master(masterUUID, null, plugin.getConfig().getDouble("MinDailyWage"));
-			master.addServant(servantUUID, false);
+			Master master = new Master(masterUUID, null, plugin.MIN_WAGE);
+			master.addServant(servantUUID, true);
 			if(master.hasServant(servantUUID)){
 				plugin.addMaster(masterUUID, master);
 				return true;

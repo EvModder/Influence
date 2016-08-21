@@ -18,8 +18,8 @@ public class CommandSetWageServant extends CommandBase{
 
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
-		//cmd:   /setwageservant <Name/all>
-		if(args.length < 1){
+		//cmd: /setwageservant <Name/all> <$>
+		if(args.length < 2){
 			sender.sendMessage("§cToo few arguments!");
 			return false;
 		}
@@ -27,7 +27,7 @@ public class CommandSetWageServant extends CommandBase{
 		Set<OfflinePlayer> targetP;
 		if(sender instanceof Player){
 			OfflinePlayer p = sender.getServer().getOfflinePlayer(args[0]);
-			if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
+			if(p != null && p.hasPlayedBefore() && !InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId())){
 				sender.sendMessage("§cYou are not the master of "+p.getName());
 				return true;
 			}

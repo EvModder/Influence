@@ -7,7 +7,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
 import Evil_Code_Influence.master.Master;
 
@@ -25,8 +24,8 @@ public class CommandTradeServant extends CommandBase{
 			return false;
 		}
 		
-		Player p = Influence.getPlugin().getServer().getPlayer(args[0]);
-		if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
+		OfflinePlayer p = sender.getServer().getOfflinePlayer(args[0]);
+		if(p != null && p.hasPlayedBefore() && !InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId())){
 			sender.sendMessage("§cYou are not the master of "+p.getName());
 			return true;
 		}

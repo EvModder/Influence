@@ -29,6 +29,7 @@ public class CommandInfluenceOffer extends CommandBase{
 			return true;
 		}
 		String choice = args.length == 0 ? label.toLowerCase() : args[0].toLowerCase();
+		boolean foundOffer = false;
 
 		if(choice.equals("accept") || choice.equals("yes") || choice.equals("agree")){
 			UUID senderUUID = ((Player)sender).getUniqueId();
@@ -37,6 +38,7 @@ public class CommandInfluenceOffer extends CommandBase{
 				TradeOffer offer = pendingTrades.get(key);
 
 				if(senderUUID.equals(offer.buyerUUID)){
+					foundOffer = true;
 					OfflinePlayer seller = plugin.getServer().getOfflinePlayer(offer.sellerUUID);
 
 					sender.sendMessage(prefix+"§aYou accepted §7"+seller.getName()+"§a's offer!");
@@ -60,6 +62,7 @@ public class CommandInfluenceOffer extends CommandBase{
 
 			for(long key : pendingTrades.keySet()){
 				if(senderUUID.equals(pendingTrades.get(key).buyerUUID)){
+					foundOffer = true;
 					OfflinePlayer seller = plugin.getServer().getOfflinePlayer(pendingTrades.get(key).sellerUUID);
 
 					sender.sendMessage(prefix+"§cYou denied "+seller.getName()+"§c's offer");
@@ -76,7 +79,10 @@ public class CommandInfluenceOffer extends CommandBase{
 		else{
 			sender.sendMessage(prefix+"§cCould not figure out your choice, please use 'accept' or 'reject'");
 		}
-
+		
+		if(foundOffer == false){
+			sender.sendMessage(prefix+"You do not have any currently pending offers");
+		}
 		return true;
 	}
 
@@ -87,7 +93,7 @@ public class CommandInfluenceOffer extends CommandBase{
 				Player seller = plugin.getServer().getPlayer(tradeOffer.sellerUUID);
 				Player buyer = plugin.getServer().getPlayer(tradeOffer.buyerUUID);
 				if(seller != null && buyer != null){
-					seller.sendMessage(prefix+" §7"+buyer.getName()
+					seller.sendMessage(prefix+"§7"+buyer.getName()
 							+"§c already has pending offers at this time, try again later");
 				}
 				return false;
@@ -98,14 +104,13 @@ public class CommandInfluenceOffer extends CommandBase{
 		pendingTrades.put(Calendar.getInstance().getTimeInMillis(), tradeOffer);
 		
 		Player seller = plugin.getServer().getPlayer(tradeOffer.sellerUUID);
-		if(seller != null) seller.sendMessage(prefix+"§a Offer sent!");
+		if(seller != null) seller.sendMessage(prefix+"§aOffer sent!");
 		
 		final UUID buyerUUID = tradeOffer.buyerUUID;
 		new BukkitRunnable(){@Override public void run(){
 			Player buyer = plugin.getServer().getPlayer(buyerUUID);
 			if(buyer != null){
-				buyer.sendMessage(prefix +
-						msgC+" Type §2/ifl accept"+msgC+" to accept this offer and §2/ifl deny"+msgC+" to deny it."+
+				buyer.sendMessage(prefix+"Type §2/ifl accept"+msgC+" to accept this offer and §2/ifl deny"+msgC+" to deny it."+
 						" Offer expires in §c"+offerTimer+msgC+" seconds.");
 			}
 		}}.runTaskLater(plugin, 1);// 1 tick delay

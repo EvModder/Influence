@@ -21,7 +21,7 @@ public class CommandInfluenceGUI extends CommandBase{
 		Set<OfflinePlayer> targetP;
 		if(sender instanceof Player){
 			OfflinePlayer p = sender.getServer().getOfflinePlayer(args[0]);
-			if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
+			if(p != null && p.hasPlayedBefore() && !InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId())){
 				sender.sendMessage("§cYou are not the master of "+p.getName());
 				return true;
 			}

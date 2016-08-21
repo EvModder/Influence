@@ -348,34 +348,39 @@ public class CommandUtils {
 			return targets;
 		}
 		
-		List<OfflinePlayer> servants = new ArrayList<OfflinePlayer>();
-		for(UUID servant : master.getServantUUIDs()){
-			OfflinePlayer player = plugin.getServer().getOfflinePlayer(servant);
-			if(player != null) servants.add(player);
-		}
+		@SuppressWarnings("deprecation")
+		OfflinePlayer p = plugin.getServer().getOfflinePlayer(arg);
+		if(p != null && master.hasServant(p.getUniqueId())) targets.add(p);
 		
-		arg = arg.toLowerCase();
-		
-		if(arg.equals("all") || arg.equals("@a") || arg.equals("@all")){
-			targets.addAll(servants);
-		}
-		else if(arg.contains("@p")){
-			// return the servant that has logged on most recently. Larger times are more recent
-			OfflinePlayer closestPlayer = servants.get(0);
-			long closestTime = closestPlayer.getLastPlayed();
-			
-			for(OfflinePlayer player : servants){
-				if(player.getLastPlayed() > closestTime){
-					closestPlayer = player;
-					closestTime = player.getLastPlayed();
-				}
+		else{
+			List<OfflinePlayer> servants = new ArrayList<OfflinePlayer>();
+			for(UUID servant : master.getServantUUIDs()){
+				OfflinePlayer player = plugin.getServer().getOfflinePlayer(servant);
+				if(player != null) servants.add(player);
 			}
-			targets.add(closestPlayer);
+			
+			arg = arg.toLowerCase();
+			
+			if(arg.equals("all") || arg.equals("@a") || arg.equals("@all")){
+				targets.addAll(servants);
+			}
+			else if(arg.contains("@p")){
+				// return the servant that has logged on most recently. Larger times are more recent
+				OfflinePlayer closestPlayer = servants.get(0);
+				long closestTime = closestPlayer.getLastPlayed();
+				
+				for(OfflinePlayer player : servants){
+					if(player.getLastPlayed() > closestTime){
+						closestPlayer = player;
+						closestTime = player.getLastPlayed();
+					}
+				}
+				targets.add(closestPlayer);
+			}
+			else if(arg.equals("@r")){
+				targets.add(servants.get(rand.nextInt(servants.size())));
+			}
 		}
-		else if(arg.equals("@r")){
-			targets.add(servants.get(rand.nextInt(servants.size())));
-		}
-		
 		return targets;
 	}
 	

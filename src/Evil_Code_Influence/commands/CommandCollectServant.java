@@ -1,17 +1,19 @@
 package Evil_Code_Influence.commands;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
 import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
 import Evil_Code_Influence.master.Master;
 import Evil_Code_Influence.servant.Servant;
 
 public class CommandCollectServant extends CommandBase{
-	private String canCollect;
+	private Set<String> canCollect;
 	public enum CollectType{
 		ITEMS(){@Override public void collect(Player servant, Player master){collectItems(servant, master);}},
 		ARMOR(){@Override public void collect(Player servant, Player master){collectArmor(servant, master);}},
@@ -27,12 +29,15 @@ public class CommandCollectServant extends CommandBase{
 	};
 	
 	public CommandCollectServant(){
-		canCollect = Influence.getPlugin().getConfig().getStringList("master-can-collect").toString().toUpperCase();
+		canCollect = new HashSet<String>();
+		for(String collect : Influence.getPlugin().getConfig().getStringList("master-can-collect")){
+			canCollect.add(collect.toUpperCase());
+		}
 	}
 
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
-		//cmd:   /collectservant <Name/all> <items/xp/servants/all>
+		//cmd: /i collect <Name/all> <items/xp/servants/all>
 		if(sender instanceof Player == false){
 			sender.sendMessage("§cThis command can only be run by in-game players");
 			return true;
@@ -65,14 +70,16 @@ public class CommandCollectServant extends CommandBase{
 		try{type = CollectType.valueOf(args[1]);}
 		catch(IllegalArgumentException  e){type=CollectType.ITEMS;}
 		
-		if(canCollect.contains(type.name())){
-			sender.sendMessage(prefix+"§c You do not have permission to collect §7"+type.name()+"§c.");
+		if(!canCollect.contains(type.name())){
+			sender.sendMessage(prefix+"§cYou do not have permission to collect §7"+type.name()+"§c.");
 			return true;
 		}
 		//NOTE: 'all' should not collect sub-servants, as stated in command description in plugin.yml
 		for(Player servant : targetP){
 			type.collect(servant, (Player)sender);
-			servant.sendMessage(prefix+"Your §c"+type.toString()+msgC+" has/have been collected by §7"+sender.getName()+msgC+'.');
+			servant.sendMessage(new StringBuilder(prefix).append("Your §c").append(type).append(msgC)
+					.append(type.toString().endsWith("S") ? " have " : " has ")
+					.append("been collected by §7").append(sender.getName()).append(msgC).append('.').toString());
 			sender.sendMessage(prefix+"§aCollected all §7"+type.toString()+"§a from §7"+servant.getName()+"§a.");
 		}
 		
@@ -135,7 +142,7 @@ public class CommandCollectServant extends CommandBase{
 				if(newMaster.addServant(s.getPlayerUUID(), false) == false){
 					String unaddable = master.getServer().getOfflinePlayer(s.getPlayerUUID()).getName();
 					
-					master.sendMessage(prefix+" §cUnable to collect S:§7"+unaddable+"§c from S:§7"+servant.getName()+"§c.");
+					master.sendMessage(prefix+"§cUnable to collect S:§7"+unaddable+"§c from S:§7"+servant.getName()+"§c.");
 					master.sendMessage("§cThe servant (§7"+unaddable+"§c) has escaped from bondage!");
 				}
 			}

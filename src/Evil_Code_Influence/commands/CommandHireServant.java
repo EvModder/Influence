@@ -51,7 +51,7 @@ public class CommandHireServant extends CommandBase{
 				new TradeOffer(employer, target, uuid, null, -wage))){//the price of becoming the servant is -wage
 			
 			target.sendMessage(prefix +
-					" §7"+employer.getName()+msgC+" would like to offer you §a"+wage+msgC +
+					"§7"+employer.getName()+msgC+" would like to offer you §a"+wage+msgC +
 					" in exchange for you becoming §7" +
 					employer.getName()+msgC+'\''+"§7s"+msgC+" servant.");
 		}

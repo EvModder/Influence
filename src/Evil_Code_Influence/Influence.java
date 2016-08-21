@@ -1,19 +1,16 @@
 package Evil_Code_Influence;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import Evil_Code_Influence.commands.CommandManager;
 import Evil_Code_Influence.commands.CommandUtils;
 import Evil_Code_Influence.listeners.Listener_PlayerAction;
@@ -29,14 +26,14 @@ public final class Influence extends JavaPlugin{
 	private FileConfiguration config; @Override public FileConfiguration getConfig(){return config;}
 	
 //	public final static String prefix = "§8[§2Ifl§8]§f ";
-	private double MIN_WAGE;
+	protected double MIN_WAGE;
 	protected Map<UUID, Master> masterList = new HashMap<UUID, Master>();
 	
 	@Override public void onEnable(){
 		//projectID= ???; //Need to find this out when uploaded to bukkit.com!
 		//this= plugin instance, projectID= bukkit id, getFile()= file to replace/update, UpdateType= type, boolean= log progress %s
 		//TODO: upload to bukkit and then uncomment this
-//		new Updater(this, projectID, getFile(), Updater.UpdateType.DEFAULT, true);
+//		new Updater(this, projectID, getFile(), Updater.UpdateType., true);
 		plugin = this;
 		config = FileIO.loadConfig(this, "config-influence.yml", getClass().getResourceAsStream("/config.yml"));
 		
@@ -99,7 +96,7 @@ public final class Influence extends JavaPlugin{
 								preferences.setAbility(Ability.valueOf(ability.toUpperCase()), true);
 							}
 						}
-						else if(data.startsWith("wage{") && data.endsWith("}")){
+						else if(data.startsWith("wage{")){
 							try{wage = Double.parseDouble(data.substring(data.indexOf('{')+1, data.indexOf('}')));}
 							catch(NumberFormatException ex){
 								getLogger().warning("Unable to load number value for WAGE in masterlist");
@@ -163,14 +160,14 @@ public final class Influence extends JavaPlugin{
 		StringBuilder file = new StringBuilder("Master List: \n");
 		List<Master> masters = new ArrayList<Master>(); masters.addAll(masterList.values());
 		
-		masters.sort(new Comparator<Master>() {
+/*		masters.sort(new Comparator<Master>() {
 			@Override
 			public int compare(final Master m1, final Master m2) {
 				// Alphabetical sorting by username
 				return (getServer().getOfflinePlayer(m1.getPlayerUUID()).getName()
 						.compareTo(getServer().getOfflinePlayer(m2.getPlayerUUID()).getName()));
 			}
-		});
+		});*/
 		
 		for(Master master : masters){
 			//Write master
@@ -202,8 +199,9 @@ public final class Influence extends JavaPlugin{
 				file.append("      s|").append(servant.getPlayerUUID().toString())
 					.append('|').append(getServer().getOfflinePlayer(servant.getPlayerUUID()).getName());
 				
-				if((master.getPreferences() == null && !servant.getAbilityConfig().equals(new AbilityConfig(true)))
-						|| !servant.getAbilityConfig().equals(master.getPreferences())){
+				boolean customPerms = master.getPreferences() == null ? !servant.getAbilityConfig().equals(new AbilityConfig(true)) :
+					!servant.getAbilityConfig().equals(master.getPreferences());
+				if(customPerms){
 					file.append("|perms{");
 					boolean notFirst = false;
 					for(Ability ability : Ability.values()){

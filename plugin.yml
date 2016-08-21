@@ -36,7 +36,7 @@ commands:
    giveservant:
       description: Give a servant to another player
       usage: /i give <Name/all> to <Name>
-      aliases: [inflgive]
+      aliases: [inflgive,inflgift]
       permission: influence.command.give
       permission-message: You do not have permission to use this command
       
@@ -91,7 +91,7 @@ commands:
       
    setwageservant:
       description: Set the daily allowance your servant receives
-      usage: /i setwage <Name/all>
+      usage: /i setwage <Name/all> <$>
       aliases: [inflsetwage,inflwage]
       permission: influence.command.setwage
       permission-message: You do not have permission to use this command

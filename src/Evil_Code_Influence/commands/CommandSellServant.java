@@ -14,7 +14,7 @@ public class CommandSellServant extends CommandBase{
 
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
-		//cmd:   /sellservant <Name/all> to <Name> for <$>
+		//cmd: /i sell <Name/all> to <Name> for <$>
 		if(args.length < 5){
 			sender.sendMessage("§cToo few arguments!");
 			return false;
@@ -23,7 +23,7 @@ public class CommandSellServant extends CommandBase{
 		Set<OfflinePlayer> targetP;
 		if(sender instanceof Player){
 			OfflinePlayer p = sender.getServer().getOfflinePlayer(args[0]);
-			if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
+			if(p != null && p.hasPlayedBefore() && !InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId())){
 				sender.sendMessage("§cYou are not the master of "+p.getName());
 				return true;
 			}
@@ -59,7 +59,7 @@ public class CommandSellServant extends CommandBase{
 		if(targetP.size() == 1)sendSellServantRequest(sender, pTo, targetP.iterator().next(), price);
 		else sendSellServantsRequest(sender, pTo, targetP, price);
 		
-		sender.sendMessage(prefix+"§a Offer sent!");
+		sender.sendMessage(prefix+"§aOffer sent!");
 		return true;
 	}
 	

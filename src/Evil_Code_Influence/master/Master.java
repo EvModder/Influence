@@ -10,6 +10,7 @@ import Evil_Code_Influence.Influence;
 import Evil_Code_Influence.InfluenceAPI;
 import Evil_Code_Influence.servant.AbilityConfig;
 import Evil_Code_Influence.servant.Servant;
+import Evil_Code_Influence.servant.AbilityConfig.Ability;
 
 public class Master {
 	private UUID masterUUID;
@@ -39,7 +40,10 @@ public class Master {
 			if(servants.containsKey(playerUUID) || playerUUID.equals(masterUUID)) return false;
 			
 			// Don't add a player as a servant if that player is this master's master
-			if(InfluenceAPI.isServant(masterUUID) && InfluenceAPI.checkIsMasterOrAboveMaster(playerUUID, masterUUID)) return false;
+			if(InfluenceAPI.isServant(masterUUID)){
+				if((InfluenceAPI.checkIsMasterOrAboveMaster(playerUUID, masterUUID) ||
+					!InfluenceAPI.checkIfServantHasPermission(masterUUID, Ability.OWN_SERVANTS))) return false;
+			}
 		}
 		
 		if(preferences != null) servants.put(playerUUID, new Servant(playerUUID, masterUUID, preferences, startingWage));

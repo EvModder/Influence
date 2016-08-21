@@ -12,7 +12,7 @@ public class CommandGiveServant extends CommandBase{
 
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
-		//cmd:   /giveservant <Name/all> to <Name>
+		//cmd: /i give <Name/all> to <Name>
 		if(args.length < 3){
 			sender.sendMessage("§cToo few arguments!");
 			return false;
@@ -66,7 +66,7 @@ public class CommandGiveServant extends CommandBase{
 			if(employer.isOnline()){
 				employer.getPlayer().sendMessage(
 						prefix+"§7"+sender.getName()+"§a gave S:§7"+servant.getName()+"§a to you as a servant!");
-//				employer.getPlayer().sendMessage(Influence.prefix+"§7 "+servant.getName()+"§a is now your servant!");
+//				employer.getPlayer().sendMessage(Influence.prefix+"§7"+servant.getName()+"§a is now your servant!");
 			}
 			if(servant.isOnline()){
 				servant.getPlayer().sendMessage(

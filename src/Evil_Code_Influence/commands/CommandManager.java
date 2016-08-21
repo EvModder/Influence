@@ -42,10 +42,11 @@ public class CommandManager extends CommandBase implements TabExecutor{
 		plugin.getCommand("influencegui").setExecutor(new CommandInfluenceGUI());
 		plugin.getCommand("influenceoffer").setExecutor(new CommandInfluenceOffer());
 		plugin.getCommand("invseeservant").setExecutor(new CommandInvseeServant());
-		plugin.getCommand("punishservant").setExecutor(new CommandPermsServant());
-		plugin.getCommand("releaseservant").setExecutor(new CommandPunishServant());
-		plugin.getCommand("sellservant").setExecutor(new CommandReleaseServant());
-		plugin.getCommand("setwageservant").setExecutor(new CommandSellServant());
+		plugin.getCommand("permsservant").setExecutor(new CommandPermsServant());
+		plugin.getCommand("punishservant").setExecutor(new CommandPunishServant());
+		plugin.getCommand("releaseservant").setExecutor(new CommandReleaseServant());
+		plugin.getCommand("sellservant").setExecutor(new CommandSellServant());
+		plugin.getCommand("setwageservant").setExecutor(new CommandSetWageServant());
 		plugin.getCommand("tphereservant").setExecutor(new CommandTphereServant());
 		plugin.getCommand("tpservant").setExecutor(new CommandTpServant());
 		plugin.getCommand("tradeservant").setExecutor(new CommandTradeServant());

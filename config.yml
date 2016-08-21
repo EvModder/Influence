@@ -58,8 +58,8 @@ default-servant-permissions:
    
 # List of what items a master is allowed to collect from a servant
 master-can-collect:
-   - items
-   - armor
-   - xp
-   - servants
-   - all
+  - items
+  - armor
+  - xp
+  - servants
+  - all

@@ -1,6 +1,6 @@
 name: Influence
 main: Evil_Code_Influence.Influence
-Author: Evil_Witchdoctor
+Author: EvModde/EvDoc/Evil_Witchdoctor
 version: 1.0.0
 softdepend: [Vault,Essentials]
 

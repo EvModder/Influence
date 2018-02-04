@@ -1,5 +1,5 @@
 # Note, requires Vault to support all economies.
-# Fallback economy is EssentialsEco, so if you do not use EssentialsEco
+# Default economy is EssentialsEco, so if you do not use EssentialsEco
 # then you will need to install Vault to use economy integration
 
 max-servitude-duration: 7d
@@ -10,14 +10,14 @@ min-daily-wage: 0
 # Time until a trade offer expires, in seconds
 trade-offer-timeout: 120
 
-# Daily wage given steadily over time instead of at intervals
+# Wage given continuously over time instead of at intervals
 continuous-wage: true
 
 # 0 for no limit
 max-servants: 0
 allow-servants-to-own-servants: true
 
-# Put a hash mark before a permission to make it always allowed to servants
+# Put a hash mark before a permission to make it always allowed for servants
 master-can-restrict:
   - break_blocks
   - place_blocks
@@ -36,7 +36,7 @@ master-can-restrict:
   - teleport
   - use_chests
 
-# Default permissions for slaves (these can be edited by masters)
+# Default permissions for servants (these can be edited by masters)
 default-servant-permissions:
    break_blocks: true
    place_blocks: true

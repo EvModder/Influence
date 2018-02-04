@@ -23,18 +23,21 @@ import Evil_Code_Influence.servant.Servant;
 import Evil_Code_Influence.servant.AbilityConfig.Ability;
 
 public final class Influence extends JavaPlugin{
-	private static Influence plugin; public static Influence getPlugin(){return plugin;}
-	private FileConfiguration config; @Override public FileConfiguration getConfig(){return config;}
+	private static Influence plugin;
+	public static Influence getPlugin(){return plugin;}
+	private FileConfiguration config;
+	@Override public FileConfiguration getConfig(){return config;}//TODO: use plugin base
 	@Override public void saveConfig(){
 		try{config.save(new File("./plugins/EvFolder/config-influence.yml"));}
 		catch(IOException e){e.printStackTrace();}
 	}
 	
-	private static AbilityConfig defaultPerms; public static AbilityConfig getDefaultAbilities(){return defaultPerms;}
+	private static AbilityConfig defaultPerms;
+	public static AbilityConfig getDefaultAbilities(){return defaultPerms;}
 	
-//	public final static String prefix = "§8[§2Ifl§8]§f ";
+//	public final static String prefix = "ï¿½8[ï¿½2Iflï¿½8]ï¿½f ";
 	protected double MIN_WAGE;
-	protected Map<UUID, Master> masterList;
+	protected Map<UUID, Master> masterList;//TODO: only load masters/servants who are online
 	
 	@Override public void onEnable(){
 		//projectID= ???; //Need to find this out when uploaded to bukkit.com!
@@ -162,7 +165,7 @@ public final class Influence extends JavaPlugin{
 		 *     s|134134-13414-134143-134143|FoofPuss
 		 *     s|q34134-13413-134543-3434f4|DiamondBlocks|perms{break_blocks,sleep,eat,attack}|wage{50}
 		 *     s|345345-asdgg-34f43f-ah34t3|pwu1|wage{25.50}
-		 *    
+		 *   
 		 *   m|asgg5g-5234v-34t53535|lekrosa|perms{place_blocks,break_blocks}:
 		 *     s|344334-34f4f-13g5hh-5234f4|Evil_Witchdoctor
 		 * 
@@ -240,7 +243,6 @@ public final class Influence extends JavaPlugin{
 	}
 	
 	protected void removeMaster(UUID masterUUID){
-		masterList.remove(masterUUID);
-		if(masterList.isEmpty()) unregisterEvents();
+		if(masterList.remove(masterUUID) != null && masterList.isEmpty()) unregisterEvents();
 	}
 }

@@ -43,7 +43,7 @@ commands:
    hireservant:
       description: Offer a sum of cash in return for someone's service
       usage: /i hire <Name> <$>
-      aliases: [inflhire]
+      aliases: [inflhire,employ,enslave]
       permission: influence.command.hire
       permission-message: You do not have permission to use this command
       

@@ -328,7 +328,7 @@ public class CommandUtils {
 					for(Player player : servantsOnline){
 						if(player.getLocation().distanceSquared(pSender.getLocation()) <= maxDist) servantsInRange.add(player);
 					}
-					
+
 					targets.add(servantsInRange.get(rand.nextInt(servantsInRange.size())));
 				}
 			}
@@ -338,11 +338,11 @@ public class CommandUtils {
 	
 	public static Set<OfflinePlayer> getTargetServants(Master master, String arg, boolean includeOffline){
 		Set<OfflinePlayer> targets = new HashSet<OfflinePlayer>();
-		if(includeOffline == false){
+		if(!includeOffline){
 			targets.addAll(getTargetServants(master, arg));
 			return targets;
 		}
-		
+
 		@SuppressWarnings("deprecation")
 		OfflinePlayer p = plugin.getServer().getOfflinePlayer(arg);
 		if(p != null && master.hasServant(p.getUniqueId())) targets.add(p);

@@ -13,26 +13,26 @@ public class CommandHireServant extends CommandBase{
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:   /hireservant <Name> <$>
 		if(sender instanceof Player == false){
-			sender.sendMessage("§cThis command can only be run by in-game players");
+			sender.sendMessage("ï¿½cThis command can only be run by in-game players");
 			return true;
 		}
 		if(args.length < 2){
-			sender.sendMessage("§cToo few arguments!");
+			sender.sendMessage("ï¿½cToo few arguments!");
 			return false;
 		}
 		Player p = sender.getServer().getPlayer(args[0]);
 		if(p == null){
-			sender.sendMessage("§cPlayer not found!");
+			sender.sendMessage("ï¿½cPlayer not found!");
 			return false;
 		}
 		if(p.getName().equals(sender.getName())){
-			sender.sendMessage("§cYou cannot hire yourself");
+			sender.sendMessage("ï¿½cYou cannot hire yourself");
 			return false;
 		}
 		double wage;
 		try{wage = Double.parseDouble(args[1]);}
 		catch(NumberFormatException e){
-			sender.sendMessage("§cInvalid wage! Please enter a positive number");
+			sender.sendMessage("ï¿½cInvalid wage! Please enter a positive number");
 			return false;
 		}
 		if(wage < 0) wage = 0;
@@ -49,10 +49,10 @@ public class CommandHireServant extends CommandBase{
 		
 		if(CommandInfluenceOffer.addTradeOffer(new TradeOffer(employer, target, null, uuid, -wage))){
 			
-			target.sendMessage(new StringBuilder(prefix).append("§7").append(employer.getName())
-					.append(msgC).append(" would like to offer you §a").append(wage)
-					.append(msgC).append(" in exchange for you becoming §7").append(employer.getName())
-					.append(msgC).append("'§7s").append(msgC).append(" servant.").toString());
+			target.sendMessage(new StringBuilder(prefix).append("ï¿½7").append(employer.getName())
+					.append(msgC).append(" would like to offer you ï¿½a").append(wage)
+					.append(msgC).append(" in exchange for you becoming ï¿½7").append(employer.getName())
+					.append(msgC).append("'ï¿½7s").append(msgC).append(" servant.").toString());
 		}
 	}
 }

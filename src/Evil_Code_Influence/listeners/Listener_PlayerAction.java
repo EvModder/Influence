@@ -122,14 +122,14 @@ public class Listener_PlayerAction implements Listener{
 		if(!evt.isCancelled()){
 			evt.setCancelled(checkActionBlocked(evt.getPlayer(), Ability.COMMANDS));
 //			if(evt.isCancelled()) evt.getPlayer().sendMessage(
-//					Influence.prefix+"§c Your current master does not allow you to use commands!");
+//					Influence.prefix+"ï¿½c Your current master does not allow you to use commands!");
 		}
 	}
 	
 	//
 	public boolean checkActionBlocked(Player player, Ability action){
 		if(InfluenceAPI.checkIfServantHasPermission(player, action) == false){
-			player.sendMessage(CommandBase.prefix+"§c Your current master does not allow you to use §7Ability:"+action.name()+"§c!");
+			player.sendMessage(CommandBase.prefix+"ï¿½c Your current master does not allow you to use ï¿½7Ability:"+action.name()+"ï¿½c!");
 			return true;
 		}
 		else return false;

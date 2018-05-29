@@ -72,7 +72,7 @@ public class CommandManager extends CommandBase implements TabExecutor{
 				sender.sendMessage(cmd.getUsage());
 			}
 		}
-		else sender.sendMessage(CommandBase.prefix+"Unknown command. Try §2/i ?"+CommandBase.msgC+" for Influence help");
+		else sender.sendMessage(CommandBase.prefix+"Unknown command. Try ï¿½2/i ?"+CommandBase.msgC+" for Influence help");
 		return true;
 	}
 	
@@ -98,43 +98,43 @@ public class CommandManager extends CommandBase implements TabExecutor{
 		}
 		
 		if(cmdName.isEmpty() || cmdName.equals("?") || cmdName.equals("help")){
-			sender.sendMessage("§"+randColor()+"+ §7§m--------------------§b §"+randColor()+'+');
+			sender.sendMessage("ï¿½"+randColor()+"+ ï¿½7ï¿½m--------------------ï¿½b ï¿½"+randColor()+'+');
 			// Send help/info/commands
 			for(String name : plugin.getDescription().getCommands().keySet()){
 				Command cmd = plugin.getCommand(name);
 				if(sender.hasPermission(cmd.getPermission())){
-					sender.sendMessage("§8 - §7 "+cmd.getUsage());//+"§f  -  "+cmd.getDescription());
+					sender.sendMessage("ï¿½8 - ï¿½7 "+cmd.getUsage());//+"ï¿½f  -  "+cmd.getDescription());
 				}
 			}
-			sender.sendMessage("§"+randColor()+"+ §7§m--------------------§b §"+randColor()+'+');
+			sender.sendMessage("ï¿½"+randColor()+"+ ï¿½7ï¿½m--------------------ï¿½b ï¿½"+randColor()+'+');
 			
 			//
 			// The old version of /s help:
 			//
 //			sender.sendMessage(
-//			"§8 - §2/§7i help <#>§f  -  Display this menu\n" +
-//			"§8 - §2/§7i release <Name/all>§f  -  Release a servant from bondage\n" +
-//			"§8 - §2/§7i give <Name/all> to <Name>§f  -  Give a servant to another player\n" +
-//			"§8 - §2/§7i sell <Name/all> to <Name> for <$>§f  -  Offer to trade a servant for the specified sum\n" +
-//			"§8 - §2/§7i trade <Name/all> for <Name/all> <$>§f  -  Offer to trade a servant you own for another servant\n" +
-//			"§8 - §2/§7i hire <Name> <$>§f  -  Offer a sum of cash to someone in return for their service\n" +
-//			"§8 - §2/§7i punish <Name/all> <#amt>§f  -  Punish a servant by damaging their health the specified amount\n" +
-//			"§8 - §2/§7i collect <Name/all> <items/xp/all>§f  -  Collect items or experience from a servant"
+//			"ï¿½8 - ï¿½2/ï¿½7i help <#>ï¿½f  -  Display this menu\n" +
+//			"ï¿½8 - ï¿½2/ï¿½7i release <Name/all>ï¿½f  -  Release a servant from bondage\n" +
+//			"ï¿½8 - ï¿½2/ï¿½7i give <Name/all> to <Name>ï¿½f  -  Give a servant to another player\n" +
+//			"ï¿½8 - ï¿½2/ï¿½7i sell <Name/all> to <Name> for <$>ï¿½f  -  Offer to trade a servant for the specified sum\n" +
+//			"ï¿½8 - ï¿½2/ï¿½7i trade <Name/all> for <Name/all> <$>ï¿½f  -  Offer to trade a servant you own for another servant\n" +
+//			"ï¿½8 - ï¿½2/ï¿½7i hire <Name> <$>ï¿½f  -  Offer a sum of cash to someone in return for their service\n" +
+//			"ï¿½8 - ï¿½2/ï¿½7i punish <Name/all> <#amt>ï¿½f  -  Punish a servant by damaging their health the specified amount\n" +
+//			"ï¿½8 - ï¿½2/ï¿½7i collect <Name/all> <items/xp/all>ï¿½f  -  Collect items or experience from a servant"
 //			//
 //			// The VERY OLD verstion of /s help (about 3.5 years old, completely irrelevant now after plugin rewrite):
 //			//
-//			"§8§l--- §7§o~ §6§o§lSlaveMaster Commands §7§o~ §8§l---\n" +
-//			"§51§8. /s on/off §6--§8 Toggle the plugin on and off\n" +
-//			"§52§8. /s grant [name] §6--§8 Grant a slave you own access to a command\n" +
-//			"§7       (eg., '/s deny §abuild§7' '/s deny §aempty bucket§7' '/s deny §c/home§7')\n" +
-//			"§53§8. /s deny  [name] §6--§8 Deny a slave you own access to a command\n" +
-//			"§54§8. /s clearperms [name] §6--§8 Remove all access perms you have given to a slave\n" +
-//			"§55§8. /s release [name] §6--§8 Release a slave from your service\n" +
-//			"§56§8. /s give [name] to [name] §6--§8 Give away one of your slaves to someone else\n" +
-//			"§57§8. /s tphere [name] §6--§8 Teleport a slave to yourself\n" +
-//			"§58§8. /s tp [name] §6--§8 Teleport yourself to a slave\n" +
-//			"§59§8. /s perms [name] §6--§8 See what permissions a slave of yours has\n" +
-//			"§510§8./s gather-all [name] §6-- §8 Collect a slave's inv. (Make sure you have room in yours)");
+//			"ï¿½8ï¿½l--- ï¿½7ï¿½o~ ï¿½6ï¿½oï¿½lSlaveMaster Commands ï¿½7ï¿½o~ ï¿½8ï¿½l---\n" +
+//			"ï¿½51ï¿½8. /s on/off ï¿½6--ï¿½8 Toggle the plugin on and off\n" +
+//			"ï¿½52ï¿½8. /s grant [name] ï¿½6--ï¿½8 Grant a slave you own access to a command\n" +
+//			"ï¿½7       (eg., '/s deny ï¿½abuildï¿½7' '/s deny ï¿½aempty bucketï¿½7' '/s deny ï¿½c/homeï¿½7')\n" +
+//			"ï¿½53ï¿½8. /s deny  [name] ï¿½6--ï¿½8 Deny a slave you own access to a command\n" +
+//			"ï¿½54ï¿½8. /s clearperms [name] ï¿½6--ï¿½8 Remove all access perms you have given to a slave\n" +
+//			"ï¿½55ï¿½8. /s release [name] ï¿½6--ï¿½8 Release a slave from your service\n" +
+//			"ï¿½56ï¿½8. /s give [name] to [name] ï¿½6--ï¿½8 Give away one of your slaves to someone else\n" +
+//			"ï¿½57ï¿½8. /s tphere [name] ï¿½6--ï¿½8 Teleport a slave to yourself\n" +
+//			"ï¿½58ï¿½8. /s tp [name] ï¿½6--ï¿½8 Teleport yourself to a slave\n" +
+//			"ï¿½59ï¿½8. /s perms [name] ï¿½6--ï¿½8 See what permissions a slave of yours has\n" +
+//			"ï¿½510ï¿½8./s gather-all [name] ï¿½6-- ï¿½8 Collect a slave's inv. (Make sure you have room in yours)");
 			return true;
 		}
 		else if(cmdName.equals("gui")){
@@ -178,7 +178,7 @@ public class CommandManager extends CommandBase implements TabExecutor{
 		}
 		// Player only commands beyond this point
 		else if(sender instanceof Player == false){
-			sender.sendMessage("§cThis command can only be run by in-game players");
+			sender.sendMessage("ï¿½cThis command can only be run by in-game players");
 			return true;
 		}
 		else if(cmdName.equals("accept")){//TODO: add "/i accept" for trade/sell deal confirmations - Done but needs testing
@@ -190,14 +190,14 @@ public class CommandManager extends CommandBase implements TabExecutor{
 				if(senderUUID.equals(offer.buyerUUID)){
 					OfflinePlayer seller = plugin.getServer().getOfflinePlayer(offer.sellerUUID);
 					
-					sender.sendMessage(Influence.prefix+" §aYou accepted §7"+seller.getName()+"§a's offer!");
+					sender.sendMessage(Influence.prefix+" ï¿½aYou accepted ï¿½7"+seller.getName()+"ï¿½a's offer!");
 					if(seller.isOnline()){
-						seller.getPlayer().sendMessage(Influence.prefix+" §7"+sender.getName()+"§a accepted your offer!");
+						seller.getPlayer().sendMessage(Influence.prefix+" ï¿½7"+sender.getName()+"ï¿½a accepted your offer!");
 					}
 					if(pendingTrades.get(key).carryOutOffer() == false){
-						sender.sendMessage("§4ERROR: Could not carry out transaction, trade cancelled");
+						sender.sendMessage("ï¿½4ERROR: Could not carry out transaction, trade cancelled");
 						if(seller.isOnline()){
-							seller.getPlayer().sendMessage("§4ERROR: Could not carry out transaction, trade cancelled");
+							seller.getPlayer().sendMessage("ï¿½4ERROR: Could not carry out transaction, trade cancelled");
 						}
 					}
 					pendingTrades.remove(key);
@@ -213,9 +213,9 @@ public class CommandManager extends CommandBase implements TabExecutor{
 				if(senderUUID.equals(pendingTrades.get(key).buyerUUID)){
 					OfflinePlayer seller = plugin.getServer().getOfflinePlayer(pendingTrades.get(key).sellerUUID);
 					
-					sender.sendMessage(Influence.prefix+" §cYou denied "+seller.getName()+"§c's offer");
+					sender.sendMessage(Influence.prefix+" ï¿½cYou denied "+seller.getName()+"ï¿½c's offer");
 					if(seller.isOnline()){
-						seller.getPlayer().sendMessage(Influence.prefix+" §7"+sender.getName()+"§c denied your offer");
+						seller.getPlayer().sendMessage(Influence.prefix+" ï¿½7"+sender.getName()+"ï¿½c denied your offer");
 					}
 					
 					pendingTrades.remove(key);

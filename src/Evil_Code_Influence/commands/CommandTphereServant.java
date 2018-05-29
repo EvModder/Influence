@@ -14,31 +14,31 @@ public class CommandTphereServant extends CommandBase{
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /i tphere <Name/all>
 		if(sender instanceof Player == false){
-			sender.sendMessage("§cThis command can only be run by in-game players");
+			sender.sendMessage("ï¿½cThis command can only be run by in-game players");
 			return true;
 		}
 		if(args.length < 1){
-			sender.sendMessage("§cToo few arguments!");
+			sender.sendMessage("ï¿½cToo few arguments!");
 			return false;
 		}
 		Player p = sender.getServer().getPlayer(args[0]);
 		if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
-			sender.sendMessage("§cYou are not the master of "+p.getName());
+			sender.sendMessage("ï¿½cYou are not the master of "+p.getName());
 			return true;
 		}
 		Master master = InfluenceAPI.getMasterByUUID(((Player)sender).getUniqueId());
 		if(master == null){
-			sender.sendMessage("§4ERROR: §cYou do not own any servants");
+			sender.sendMessage("ï¿½4ERROR: ï¿½cYou do not own any servants");
 			return true;
 		}
 		
 		Set<Player> targetP = CommandUtils.getTargetServants(master, args[0]);
 		if(targetP.isEmpty()){
-			sender.sendMessage("§cPlayer not found!");
+			sender.sendMessage("ï¿½cPlayer not found!");
 			return true;
 		}
 		for(Player servant : targetP){
-			servant.sendMessage(prefix+"§cYou are being teleported by §7"+sender.getName()+"§c...");
+			servant.sendMessage(prefix+"ï¿½cYou are being teleported by ï¿½7"+sender.getName()+"ï¿½c...");
 			servant.teleport((Player)sender);
 		}
 		

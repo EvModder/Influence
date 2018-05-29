@@ -15,19 +15,19 @@ public class CommandReleaseServant extends CommandBase{
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /releaseservant <Name/all>
 		if(args.length < 1){
-			sender.sendMessage("§cToo few arguments!");
+			sender.sendMessage("ï¿½cToo few arguments!");
 			return false;
 		}
 		Set<OfflinePlayer> targetP;
 		if(sender instanceof Player){
 			OfflinePlayer p = sender.getServer().getOfflinePlayer(args[0]);
 			if(p != null && p.hasPlayedBefore() && !InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId())){
-				sender.sendMessage("§cYou are not the master of "+p.getName());
+				sender.sendMessage("ï¿½cYou are not the master of "+p.getName());
 				return true;
 			}
 			Master master = InfluenceAPI.getMasterByUUID(((Player)sender).getUniqueId());
 			if(master == null){
-				sender.sendMessage("§4ERROR: §cYou do not own any servants");
+				sender.sendMessage("ï¿½4ERROR: ï¿½cYou do not own any servants");
 				return true;
 			}
 			targetP = CommandUtils.getTargetServants(master, args[0], true);
@@ -35,8 +35,8 @@ public class CommandReleaseServant extends CommandBase{
 		else targetP = CommandUtils.getTargetServants(sender, args[0], true);
 		
 		if(targetP.isEmpty()){
-			sender.sendMessage("§cPlayer[Servant] not found!");
-			sender.sendMessage("§7Perhaps they have already been freed?");
+			sender.sendMessage("ï¿½cPlayer[Servant] not found!");
+			sender.sendMessage("ï¿½7Perhaps they have already been freed?");
 			return true;
 		}
 		
@@ -44,8 +44,8 @@ public class CommandReleaseServant extends CommandBase{
 		
 		for(OfflinePlayer servant : targetP){
 			InfluenceAPI.releaseServantFromMaster(servant.getUniqueId(), masterUUID);
-			sender.sendMessage(prefix+"§aYou have released §7"+servant.getName()+"§a from your service");
-			if(servant.isOnline()) servant.getPlayer().sendMessage(prefix+"§aYou have released!");
+			sender.sendMessage(prefix+"ï¿½aYou have released ï¿½7"+servant.getName()+"ï¿½a from your service");
+			if(servant.isOnline()) servant.getPlayer().sendMessage(prefix+"ï¿½aYou have released!");
 		}
 		
 		return true;

@@ -16,7 +16,7 @@ public class CommandSellServant extends CommandBase{
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /i sell <Name/all> to <Name> for <$>
 		if(args.length < 5){
-			sender.sendMessage("§cToo few arguments!");
+			sender.sendMessage("ï¿½cToo few arguments!");
 			return false;
 		}
 		
@@ -24,13 +24,13 @@ public class CommandSellServant extends CommandBase{
 		if(sender instanceof Player){
 			OfflinePlayer p = sender.getServer().getOfflinePlayer(args[0]);
 			if(p != null && p.hasPlayedBefore() && !InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId())){
-				sender.sendMessage("§cYou are not the master of "+p.getName());
+				sender.sendMessage("ï¿½cYou are not the master of "+p.getName());
 				return true;
 			}
 			
 			Master master = InfluenceAPI.getMasterByUUID(((Player)sender).getUniqueId());
 			if(master == null){
-				sender.sendMessage("§4ERROR: §cYou do not own any servants");
+				sender.sendMessage("ï¿½4ERROR: ï¿½cYou do not own any servants");
 				return true;
 			}
 			targetP = CommandUtils.getTargetServants(master, args[0], true);
@@ -38,28 +38,28 @@ public class CommandSellServant extends CommandBase{
 		else targetP = CommandUtils.getTargetPlayers(sender, args[0], true);
 		
 		if(targetP.isEmpty()){
-			sender.sendMessage("§cPlayer[Servant] not found!");
+			sender.sendMessage("ï¿½cPlayer[Servant] not found!");
 			return true;
 		}
 		Player pTo = sender.getServer().getPlayer(args[2]);
 		if(pTo == null){
-			sender.sendMessage("§cPlayer[To] not found!");
+			sender.sendMessage("ï¿½cPlayer[To] not found!");
 			return false;
 		}
 		if(pTo.getName().equals(sender.getName())){
-			sender.sendMessage("§cYou already own this servant");
+			sender.sendMessage("ï¿½cYou already own this servant");
 			return false;
 		}
 		double price;
 		try{price = Double.parseDouble(args[4]);}
 		catch(NumberFormatException ex){
-			sender.sendMessage("§cInvalid price! Please enter a number value");
+			sender.sendMessage("ï¿½cInvalid price! Please enter a number value");
 			return false;
 		}
 		if(targetP.size() == 1)sendSellServantRequest(sender, pTo, targetP.iterator().next(), price);
 		else sendSellServantsRequest(sender, pTo, targetP, price);
 		
-		sender.sendMessage(prefix+"§aOffer sent!");
+		sender.sendMessage(prefix+"ï¿½aOffer sent!");
 		return true;
 	}
 	
@@ -68,8 +68,8 @@ public class CommandSellServant extends CommandBase{
 		uuids.add(servant.getUniqueId());
 		
 		if(CommandInfluenceOffer.addTradeOffer(new TradeOffer(seller, buyer, uuids, null, salePrice))){
-			buyer.sendMessage(prefix+"§7"+seller.getName()+msgC+" is offering to sell §7"+servant.getName()+
-						msgC+" to you as a servant for the lump sum of §c"+salePrice+'$'+msgC+'.');
+			buyer.sendMessage(prefix+"ï¿½7"+seller.getName()+msgC+" is offering to sell ï¿½7"+servant.getName()+
+						msgC+" to you as a servant for the lump sum of ï¿½c"+salePrice+'$'+msgC+'.');
 		}
 	}
 	
@@ -79,13 +79,13 @@ public class CommandSellServant extends CommandBase{
 		
 		for(OfflinePlayer servant : servants){
 			uuids.add(servant.getUniqueId());
-			servantNames.append(servant.getName()); servantNames.append(msgC+", §7");
+			servantNames.append(servant.getName()); servantNames.append(msgC+", ï¿½7");
 		}
 		
 		if(CommandInfluenceOffer.addTradeOffer(new TradeOffer(seller, buyer, uuids, null, salePrice))){
-			buyer.sendMessage(prefix+"§7"+seller.getName()+msgC + 
-				" is offering to sell you the following servants: §7"+servantNames.substring(0, servantNames.length()-4) +
-				" for the lump sum of §c"+salePrice+'$'+msgC+'.');
+			buyer.sendMessage(prefix+"ï¿½7"+seller.getName()+msgC + 
+				" is offering to sell you the following servants: ï¿½7"+servantNames.substring(0, servantNames.length()-4) +
+				" for the lump sum of ï¿½c"+salePrice+'$'+msgC+'.');
 		}
 	}
 }

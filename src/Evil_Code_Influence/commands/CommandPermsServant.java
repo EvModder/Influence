@@ -27,7 +27,7 @@ public class CommandPermsServant extends CommandBase{
 			if(args.length < 2){
 				StringBuilder builder = new StringBuilder(prefix).append("Default perms for your servants > \n");
 				for(Ability ability : Ability.values()){
-					builder.append(abilities.hasAbility(ability) ? "§a" : "§c").append(ability.name().toLowerCase()
+					builder.append(abilities.hasAbility(ability) ? "ï¿½a" : "ï¿½c").append(ability.name().toLowerCase()
 						.replace('_', '-')).append(msgC).append(", ");
 				}
 				sender.sendMessage(builder.substring(0, builder.length()-2)+'.');
@@ -36,21 +36,21 @@ public class CommandPermsServant extends CommandBase{
 				Ability ability;
 				try{ability = Ability.valueOf(args[1].replace('-', '_').toUpperCase());}
 				catch(IllegalArgumentException ex){
-					sender.sendMessage(new StringBuilder(prefix).append("§cUnknown permission '§7").append(args[1]).append("§c'\n")
-							.append(prefix).append("To view all permissions, try §2/i perms ").append(args[0]).toString());
+					sender.sendMessage(new StringBuilder(prefix).append("ï¿½cUnknown permission 'ï¿½7").append(args[1]).append("ï¿½c'\n")
+							.append(prefix).append("To view all permissions, try ï¿½2/i perms ").append(args[0]).toString());
 					return true;
 				}
 				sender.sendMessage(new StringBuilder(prefix).append("Default perm for your servants > \n")
-						.append(prefix).append("§7").append(ability.name().toLowerCase().replace('_', '-')).append(msgC)
-						.append(" is ").append(abilities.hasAbility(ability) ? "§aallowed" : "§cdenied").append(msgC).append('.')
+						.append(prefix).append("ï¿½7").append(ability.name().toLowerCase().replace('_', '-')).append(msgC)
+						.append(" is ").append(abilities.hasAbility(ability) ? "ï¿½aallowed" : "ï¿½cdenied").append(msgC).append('.')
 						.toString());
 			}
 			if(args.length > 2){
 				Ability ability;
 				try{ability = Ability.valueOf(args[1].replace('-', '_').toUpperCase());}
 				catch(IllegalArgumentException ex){
-					sender.sendMessage(new StringBuilder(prefix).append("§cUnknown permission '§7").append(args[1]).append("§c'\n")
-							.append(prefix).append("To view all permissions, try §2/i perms ").append(args[0]).toString());
+					sender.sendMessage(new StringBuilder(prefix).append("ï¿½cUnknown permission 'ï¿½7").append(args[1]).append("ï¿½c'\n")
+							.append(prefix).append("To view all permissions, try ï¿½2/i perms ").append(args[0]).toString());
 					return true;
 				}
 				
@@ -59,8 +59,8 @@ public class CommandPermsServant extends CommandBase{
 				String abilityName = ability.name().toLowerCase().replace('_', '-');
 				
 				sender.sendMessage(new StringBuilder(prefix).append("Default perm for your servants > \n")
-						.append(prefix).append("§7").append(abilityName).append(msgC).append(" is now ")
-						.append(newValue ? "§aallowed" : "§cdenied").append(msgC).append('.').toString());
+						.append(prefix).append("ï¿½7").append(abilityName).append(msgC).append(" is now ")
+						.append(newValue ? "ï¿½aallowed" : "ï¿½cdenied").append(msgC).append('.').toString());
 				
 				if(master != null){
 					if(master.getPreferences() != null) master.getPreferences().setAbility(ability, newValue);
@@ -84,12 +84,12 @@ public class CommandPermsServant extends CommandBase{
 		if(sender instanceof Player){
 			OfflinePlayer p = sender.getServer().getOfflinePlayer(args[0]);
 			if(p != null && p.hasPlayedBefore() && !InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId())){
-				sender.sendMessage("§cYou are not the master of "+p.getName());
+				sender.sendMessage("ï¿½cYou are not the master of "+p.getName());
 				return true;
 			}
 			Master master = InfluenceAPI.getMasterByUUID(((Player)sender).getUniqueId());
 			if(master == null){
-				sender.sendMessage("§4ERROR: §cYou do not own any servants");
+				sender.sendMessage("ï¿½4ERROR: ï¿½cYou do not own any servants");
 				return true;
 			}
 			targetP = CommandUtils.getTargetServants(master, args[0], true);
@@ -107,7 +107,7 @@ public class CommandPermsServant extends CommandBase{
 			}
 			catch(IllegalArgumentException ex){}
 			
-			sender.sendMessage("§cPlayer not found!");
+			sender.sendMessage("ï¿½cPlayer not found!");
 			return true;
 		}
 		Set<Servant> targetS = new HashSet<Servant>();
@@ -123,14 +123,14 @@ public class CommandPermsServant extends CommandBase{
 			for(Servant servant : targetS){
 				String servantName = sender.getServer().getOfflinePlayer(servant.getPlayerUUID()).getName();
 				
-//				StringBuilder builder = new StringBuilder(prefix).append("Showing §7")
+//				StringBuilder builder = new StringBuilder(prefix).append("Showing ï¿½7")
 //						.append(servantName).append(msgC).append("'s permissions: \n");
-				StringBuilder builder = new StringBuilder(prefix).append("§7").append(servantName).append(msgC).append(" > ");
+				StringBuilder builder = new StringBuilder(prefix).append("ï¿½7").append(servantName).append(msgC).append(" > ");
 				
 				for(Ability ability : Ability.values()){
-//					builder.append("§7").append(ability.name().toLowerCase().replace('_', '-')).append(msgC)
-//						   .append(": ").append(servant.hasAbility(ability) ? "§aallowed" : "§cdenied").append(msgC).append(", ");
-					builder.append(servant.hasAbility(ability) ? "§a" : "§c").append(ability.name().toLowerCase()
+//					builder.append("ï¿½7").append(ability.name().toLowerCase().replace('_', '-')).append(msgC)
+//						   .append(": ").append(servant.hasAbility(ability) ? "ï¿½aallowed" : "ï¿½cdenied").append(msgC).append(", ");
+					builder.append(servant.hasAbility(ability) ? "ï¿½a" : "ï¿½c").append(ability.name().toLowerCase()
 							.replace('_', '-')).append(msgC).append(", ");
 				}
 				sender.sendMessage(builder.substring(0, builder.length()-2)+'.');
@@ -140,16 +140,16 @@ public class CommandPermsServant extends CommandBase{
 			Ability ability;
 			try{ability = Ability.valueOf(args[1].replace('-', '_').toUpperCase());}
 			catch(IllegalArgumentException ex){
-				sender.sendMessage(new StringBuilder(prefix).append("§cUnknown permission '§7").append(args[1]).append("§c'\n")
-						.append(prefix).append("To view all permissions, try §2/i perms ").append(args[0]).toString());
+				sender.sendMessage(new StringBuilder(prefix).append("ï¿½cUnknown permission 'ï¿½7").append(args[1]).append("ï¿½c'\n")
+						.append(prefix).append("To view all permissions, try ï¿½2/i perms ").append(args[0]).toString());
 				return true;
 			}
 			for(Servant servant : targetS){
 				String servantName = sender.getServer().getOfflinePlayer(servant.getPlayerUUID()).getName();
 				
-				sender.sendMessage(new StringBuilder(prefix).append("§7").append(servantName).append(msgC)
-						.append(" > ").append("§7").append(ability.name().toLowerCase().replace('_', '-')).append(msgC)
-						.append(" is ").append(servant.hasAbility(ability) ? "§aallowed" : "§cdenied").append(msgC).append('.')
+				sender.sendMessage(new StringBuilder(prefix).append("ï¿½7").append(servantName).append(msgC)
+						.append(" > ").append("ï¿½7").append(ability.name().toLowerCase().replace('_', '-')).append(msgC)
+						.append(" is ").append(servant.hasAbility(ability) ? "ï¿½aallowed" : "ï¿½cdenied").append(msgC).append('.')
 						.toString());
 			}
 		}
@@ -157,8 +157,8 @@ public class CommandPermsServant extends CommandBase{
 			Ability ability;
 			try{ability = Ability.valueOf(args[1].replace('-', '_').toUpperCase());}
 			catch(IllegalArgumentException ex){
-				sender.sendMessage(new StringBuilder(prefix).append("§cUnknown permission '§7").append(args[1]).append("§c'\n")
-						.append(prefix).append("To view all permissions, try §2/i perms ").append(args[0]).toString());
+				sender.sendMessage(new StringBuilder(prefix).append("ï¿½cUnknown permission 'ï¿½7").append(args[1]).append("ï¿½c'\n")
+						.append(prefix).append("To view all permissions, try ï¿½2/i perms ").append(args[0]).toString());
 				return true;
 			}
 			args[2] = args[2].toLowerCase();
@@ -169,10 +169,10 @@ public class CommandPermsServant extends CommandBase{
 				
 				servant.setAbility(ability, newValue);//Poof!
 				
-				sender.sendMessage(new StringBuilder(prefix).append("§oServant permissions updated\n")
-						.append(prefix).append("§7").append(servantName).append(msgC)
-						.append(" > ").append("§7").append(ability.name().toLowerCase().replace('_', '-')).append(msgC)
-						.append(" is now ").append(newValue ? "§aallowed" : "§cdenied").append(msgC).append('.')
+				sender.sendMessage(new StringBuilder(prefix).append("ï¿½oServant permissions updated\n")
+						.append(prefix).append("ï¿½7").append(servantName).append(msgC)
+						.append(" > ").append("ï¿½7").append(ability.name().toLowerCase().replace('_', '-')).append(msgC)
+						.append(" is now ").append(newValue ? "ï¿½aallowed" : "ï¿½cdenied").append(msgC).append('.')
 						.toString());
 			}
 		}

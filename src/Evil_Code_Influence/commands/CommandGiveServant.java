@@ -14,7 +14,7 @@ public class CommandGiveServant extends CommandBase{
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /i give <Name/all> to <Name>
 		if(args.length < 3){
-			sender.sendMessage("§cToo few arguments!");
+			sender.sendMessage("ï¿½cToo few arguments!");
 			return false;
 		}
 		
@@ -22,13 +22,13 @@ public class CommandGiveServant extends CommandBase{
 		if(sender instanceof Player){
 			OfflinePlayer p = sender.getServer().getOfflinePlayer(args[0]);
 			if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
-				sender.sendMessage("§cYou are not the master of "+p.getName());
+				sender.sendMessage("ï¿½cYou are not the master of "+p.getName());
 				return true;
 			}
 			
 			Master master = InfluenceAPI.getMasterByUUID(((Player)sender).getUniqueId());
 			if(master == null){
-				sender.sendMessage("§4ERROR: §cYou do not own any servants");
+				sender.sendMessage("ï¿½4ERROR: ï¿½cYou do not own any servants");
 				return true;
 			}
 			targetP = CommandUtils.getTargetServants(master, args[0], true);
@@ -36,25 +36,25 @@ public class CommandGiveServant extends CommandBase{
 		else targetP = CommandUtils.getTargetPlayers(sender, args[0], true);
 		
 		if(targetP.isEmpty()){
-			sender.sendMessage("§cPlayer[Servant] not found!");
+			sender.sendMessage("ï¿½cPlayer[Servant] not found!");
 			return true;
 		}
 		
 		OfflinePlayer pTo = sender.getServer().getOfflinePlayer(args[2]);
 		if(pTo == null || pTo.hasPlayedBefore()==false){
-			sender.sendMessage("§cPlayer[To] not found!");
+			sender.sendMessage("ï¿½cPlayer[To] not found!");
 			return false;
 		}
 		
 		if(pTo.getName().equals(sender.getName())){
-			sender.sendMessage("§cYou already own this servant");
+			sender.sendMessage("ï¿½cYou already own this servant");
 			return false;
 		}
 		
 		for(OfflinePlayer player : targetP){
 			boolean success = giveServant(sender, pTo, player);
-			if(success) sender.sendMessage("§aYou gave S:§7"+player.getName()+"§a to §7"+pTo.getName());
-			else sender.sendMessage("§cUnable to give S:§7"+player.getName()+"§a to §7"+pTo.getName());
+			if(success) sender.sendMessage("ï¿½aYou gave S:ï¿½7"+player.getName()+"ï¿½a to ï¿½7"+pTo.getName());
+			else sender.sendMessage("ï¿½cUnable to give S:ï¿½7"+player.getName()+"ï¿½a to ï¿½7"+pTo.getName());
 		}
 		
 		return true;
@@ -65,12 +65,12 @@ public class CommandGiveServant extends CommandBase{
 		if(success){
 			if(employer.isOnline()){
 				employer.getPlayer().sendMessage(
-						prefix+"§7"+sender.getName()+"§a gave S:§7"+servant.getName()+"§a to you as a servant!");
-//				employer.getPlayer().sendMessage(Influence.prefix+"§7"+servant.getName()+"§a is now your servant!");
+						prefix+"ï¿½7"+sender.getName()+"ï¿½a gave S:ï¿½7"+servant.getName()+"ï¿½a to you as a servant!");
+//				employer.getPlayer().sendMessage(Influence.prefix+"ï¿½7"+servant.getName()+"ï¿½a is now your servant!");
 			}
 			if(servant.isOnline()){
 				servant.getPlayer().sendMessage(
-						prefix+"§7"+sender.getName()+msgC+" gave you as a servant to §7"+employer.getName()+msgC+'.');
+						prefix+"ï¿½7"+sender.getName()+msgC+" gave you as a servant to ï¿½7"+employer.getName()+msgC+'.');
 			}
 		}
 		return success;

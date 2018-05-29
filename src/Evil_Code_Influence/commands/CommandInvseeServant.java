@@ -11,26 +11,26 @@ public class CommandInvseeServant extends CommandBase{
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:   /invseeservant <Name>
 		if(sender instanceof Player == false){
-			sender.sendMessage("§cThis command can only be run by in-game players");
+			sender.sendMessage("ï¿½cThis command can only be run by in-game players");
 			return true;
 		}
 		
 		if(args.length < 1){
-			sender.sendMessage("§cToo few arguments!");
+			sender.sendMessage("ï¿½cToo few arguments!");
 			return false;
 		}
 		
 		Player p = sender.getServer().getPlayer(args[0]);
 		if(p == null){
-			sender.sendMessage("§cPlayer not found!");
+			sender.sendMessage("ï¿½cPlayer not found!");
 			return false;
 		}
 		if(InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
-			sender.sendMessage("§cYou are not the master of §7"+p.getName()+"§c!");
+			sender.sendMessage("ï¿½cYou are not the master of ï¿½7"+p.getName()+"ï¿½c!");
 			return true;
 		}
 		if(p.hasPermission("influence.invsee.exempt")){
-			sender.sendMessage("§cYou do not have permission to view §7"+p.getName()+"§c's inventory");
+			sender.sendMessage("ï¿½cYou do not have permission to view ï¿½7"+p.getName()+"ï¿½c's inventory");
 			return true;
 		}
 		((Player)sender).openInventory(p.getInventory());

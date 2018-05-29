@@ -20,7 +20,7 @@ public class CommandSetWageServant extends CommandBase{
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /setwageservant <Name/all> <$>
 		if(args.length < 2){
-			sender.sendMessage("§cToo few arguments!");
+			sender.sendMessage("ï¿½cToo few arguments!");
 			return false;
 		}
 		
@@ -28,13 +28,13 @@ public class CommandSetWageServant extends CommandBase{
 		if(sender instanceof Player){
 			OfflinePlayer p = sender.getServer().getOfflinePlayer(args[0]);
 			if(p != null && p.hasPlayedBefore() && !InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId())){
-				sender.sendMessage("§cYou are not the master of "+p.getName());
+				sender.sendMessage("ï¿½cYou are not the master of "+p.getName());
 				return true;
 			}
 			
 			Master master = InfluenceAPI.getMasterByUUID(((Player)sender).getUniqueId());
 			if(master == null){
-				sender.sendMessage("§4ERROR: §cYou do not own any servants");
+				sender.sendMessage("ï¿½4ERROR: ï¿½cYou do not own any servants");
 				return true;
 			}
 			targetP = CommandUtils.getTargetServants(master, args[0], true);
@@ -42,7 +42,7 @@ public class CommandSetWageServant extends CommandBase{
 		else targetP = CommandUtils.getTargetServants(sender, args[0], true);
 		
 		if(targetP.isEmpty()){
-			sender.sendMessage("§cPlayer[Servant] not found!");
+			sender.sendMessage("ï¿½cPlayer[Servant] not found!");
 			return true;
 		}
 		
@@ -50,8 +50,8 @@ public class CommandSetWageServant extends CommandBase{
 		try{newWage = Double.parseDouble(args[2]);}
 		catch(NumberFormatException ex){}
 		if(newWage < MIN_WAGE){
-			sender.sendMessage("§cInvalid wage! Number must be a positive value" +
-					(MIN_WAGE > 0 ? " above or equal to the minimum wage (§7"+MIN_WAGE+"§c)." : ""));
+			sender.sendMessage("ï¿½cInvalid wage! Number must be a positive value" +
+					(MIN_WAGE > 0 ? " above or equal to the minimum wage (ï¿½7"+MIN_WAGE+"ï¿½c)." : ""));
 			return false;
 		}
 		

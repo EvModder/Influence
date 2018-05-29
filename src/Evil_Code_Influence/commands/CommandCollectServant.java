@@ -39,27 +39,27 @@ public class CommandCollectServant extends CommandBase{
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /i collect <Name/all> <items/xp/servants/all>
 		if(sender instanceof Player == false){
-			sender.sendMessage("§cThis command can only be run by in-game players");
+			sender.sendMessage("ï¿½cThis command can only be run by in-game players");
 			return true;
 		}
 		if(args.length < 2){
-			sender.sendMessage("§cToo few arguments!");
+			sender.sendMessage("ï¿½cToo few arguments!");
 			return false;
 		}
 		Player p = sender.getServer().getPlayer(args[0]);
 		if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
-			sender.sendMessage("§cYou are not the master of "+p.getName());
+			sender.sendMessage("ï¿½cYou are not the master of "+p.getName());
 			return true;
 		}
 		Master master = InfluenceAPI.getMasterByUUID(((Player)sender).getUniqueId());
 		if(master == null){
-			sender.sendMessage("§4ERROR: §cYou do not own any servants");
+			sender.sendMessage("ï¿½4ERROR: ï¿½cYou do not own any servants");
 			return true;
 		}
 		
 		Set<Player> targetP = CommandUtils.getTargetServants(master, args[0]);
 		if(targetP.isEmpty()){
-			sender.sendMessage("§cPlayer not found!");
+			sender.sendMessage("ï¿½cPlayer not found!");
 			return true;
 		}
 		args[1] = args[1].toUpperCase();
@@ -71,16 +71,16 @@ public class CommandCollectServant extends CommandBase{
 		catch(IllegalArgumentException  e){type=CollectType.ITEMS;}
 		
 		if(!canCollect.contains(type.name())){
-			sender.sendMessage(prefix+"§cYou do not have permission to collect §7"+type.name()+"§c.");
+			sender.sendMessage(prefix+"ï¿½cYou do not have permission to collect ï¿½7"+type.name()+"ï¿½c.");
 			return true;
 		}
 		//NOTE: 'all' should not collect sub-servants, as stated in command description in plugin.yml
 		for(Player servant : targetP){
 			type.collect(servant, (Player)sender);
-			servant.sendMessage(new StringBuilder(prefix).append("Your §c").append(type).append(msgC)
+			servant.sendMessage(new StringBuilder(prefix).append("Your ï¿½c").append(type).append(msgC)
 					.append(type.toString().endsWith("S") ? " have " : " has ")
-					.append("been collected by §7").append(sender.getName()).append(msgC).append('.').toString());
-			sender.sendMessage(prefix+"§aCollected all §7"+type.toString()+"§a from §7"+servant.getName()+"§a.");
+					.append("been collected by ï¿½7").append(sender.getName()).append(msgC).append('.').toString());
+			sender.sendMessage(prefix+"ï¿½aCollected all ï¿½7"+type.toString()+"ï¿½a from ï¿½7"+servant.getName()+"ï¿½a.");
 		}
 		
 		return true;
@@ -142,8 +142,8 @@ public class CommandCollectServant extends CommandBase{
 				if(newMaster.addServant(s.getPlayerUUID(), false) == false){
 					String unaddable = master.getServer().getOfflinePlayer(s.getPlayerUUID()).getName();
 					
-					master.sendMessage(prefix+"§cUnable to collect S:§7"+unaddable+"§c from S:§7"+servant.getName()+"§c.");
-					master.sendMessage("§cThe servant (§7"+unaddable+"§c) has escaped from bondage!");
+					master.sendMessage(prefix+"ï¿½cUnable to collect S:ï¿½7"+unaddable+"ï¿½c from S:ï¿½7"+servant.getName()+"ï¿½c.");
+					master.sendMessage("ï¿½cThe servant (ï¿½7"+unaddable+"ï¿½c) has escaped from bondage!");
 				}
 			}
 			InfluenceAPI.freeAllServantsFromMaster(servant.getUniqueId());

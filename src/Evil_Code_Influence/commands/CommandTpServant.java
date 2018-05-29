@@ -11,23 +11,23 @@ public class CommandTpServant extends CommandBase{
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /i tp <Name>
 		if(sender instanceof Player == false){
-			sender.sendMessage("§cThis command can only be run by in-game players");
+			sender.sendMessage("ï¿½cThis command can only be run by in-game players");
 			return true;
 		}
 		if(args.length < 1){
-			sender.sendMessage("§cToo few arguments!");
+			sender.sendMessage("ï¿½cToo few arguments!");
 			return false;
 		}
 		Player p = sender.getServer().getPlayer(args[0]);
 		if(p == null){
-			sender.sendMessage("§cPlayer not found!");
+			sender.sendMessage("ï¿½cPlayer not found!");
 			return false;
 		}
 		if(InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
-			sender.sendMessage("§cYou are not the master of "+p.getName());
+			sender.sendMessage("ï¿½cYou are not the master of "+p.getName());
 			return true;
 		}
-		sender.sendMessage(prefix+"§aTeleporting to §7"+p.getName()+"§a...");
+		sender.sendMessage(prefix+"ï¿½aTeleporting to ï¿½7"+p.getName()+"ï¿½a...");
 		((Player)sender).teleport(p);
 		
 		return true;

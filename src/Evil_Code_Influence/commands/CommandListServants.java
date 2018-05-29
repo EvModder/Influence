@@ -36,7 +36,7 @@ public class CommandListServants extends CommandBase{
 			if(p != null && p.hasPlayedBefore()){
 				Master master = InfluenceAPI.getMasterByUUID(p.getUniqueId());
 				if(master == null || master.hasServants() == false){
-					sender.sendMessage("§7"+p.getName()+"§c does not own any servants");
+					sender.sendMessage("ï¿½7"+p.getName()+"ï¿½c does not own any servants");
 					return true;
 				}
 				else targetP.add(p.getUniqueId());
@@ -45,21 +45,21 @@ public class CommandListServants extends CommandBase{
 				targetP.addAll(InfluenceAPI.getAllMasterUUIDs());
 			}
 			else{
-				sender.sendMessage("§cPlayer[Master] not found!");
+				sender.sendMessage("ï¿½cPlayer[Master] not found!");
 				return true;
 			}
 		}
 		StringBuilder builder = new StringBuilder();
 		for(UUID master : targetP){
-			builder.append(prefix).append("§7").append(sender.getServer().getOfflinePlayer(master).getName())
+			builder.append(prefix).append("ï¿½7").append(sender.getServer().getOfflinePlayer(master).getName())
 			.append(msgC).append(" > \n");
 			for(UUID servant : InfluenceAPI.getMasterByUUID(master).getServantUUIDs()){
-				builder.append("§7").append(sender.getServer().getOfflinePlayer(servant).getName()).append(msgC).append(", ");
+				builder.append("ï¿½7").append(sender.getServer().getOfflinePlayer(servant).getName()).append(msgC).append(", ");
 			}
 			builder.delete(builder.length()-2, builder.length()).append(".\n");
 		}
 		String list = builder.substring(0, builder.length()-1);
-		if(sender instanceof Player) list = list.replace(sender.getName()+' ', "§lYou ");
+		if(sender instanceof Player) list = list.replace(sender.getName()+' ', "ï¿½lYou ");
 		sender.sendMessage(list);
 		
 		return true;

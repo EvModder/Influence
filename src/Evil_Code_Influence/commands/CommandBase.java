@@ -5,5 +5,5 @@ import org.bukkit.command.CommandExecutor;
 
 public abstract class CommandBase implements CommandExecutor{
 	public final static transient ChatColor msgC = ChatColor.GOLD;
-	public final static transient String prefix = "§8[§2Ifl§8]§f "+msgC;
+	public final static transient String prefix = "ï¿½8[ï¿½2Iflï¿½8]ï¿½f "+msgC;
 }

@@ -14,7 +14,7 @@ public class CommandInfluenceGUI extends CommandBase{
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:   /influencegui <Name/default>
 		if(args.length < 1){
-			sender.sendMessage("§cToo few arguments!");
+			sender.sendMessage("ï¿½cToo few arguments!");
 			return false;
 		}
 		
@@ -22,13 +22,13 @@ public class CommandInfluenceGUI extends CommandBase{
 		if(sender instanceof Player){
 			OfflinePlayer p = sender.getServer().getOfflinePlayer(args[0]);
 			if(p != null && p.hasPlayedBefore() && !InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId())){
-				sender.sendMessage("§cYou are not the master of "+p.getName());
+				sender.sendMessage("ï¿½cYou are not the master of "+p.getName());
 				return true;
 			}
 			
 			Master master = InfluenceAPI.getMasterByUUID(((Player)sender).getUniqueId());
 			if(master == null){
-				sender.sendMessage("§4ERROR: §cYou do not own any servants");
+				sender.sendMessage("ï¿½4ERROR: ï¿½cYou do not own any servants");
 				return true;
 			}
 			targetP = CommandUtils.getTargetServants(master, args[0], true);
@@ -36,19 +36,19 @@ public class CommandInfluenceGUI extends CommandBase{
 		else targetP = CommandUtils.getTargetServants(sender, args[0], true);
 		
 		if(targetP.isEmpty()){
-			sender.sendMessage("§cPlayer[Servant] not found!");
+			sender.sendMessage("ï¿½cPlayer[Servant] not found!");
 			return true;
 		}
 		
 		
 		
 		if(sender instanceof Player == false){
-			sender.sendMessage("§cThis command can only be run by in-game players");
+			sender.sendMessage("ï¿½cThis command can only be run by in-game players");
 			return true;
 		}
 		
 		if(args.length < 1){
-			sender.sendMessage("§cToo few arguments!");
+			sender.sendMessage("ï¿½cToo few arguments!");
 			return false;
 		}
 		
@@ -59,11 +59,11 @@ public class CommandInfluenceGUI extends CommandBase{
 			//specific preferences
 			OfflinePlayer p = sender.getServer().getOfflinePlayer(args[0]);
 			if(p == null){
-				sender.sendMessage("§cPlayer not found!");
+				sender.sendMessage("ï¿½cPlayer not found!");
 				return false;
 			}
 			if(InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
-				sender.sendMessage("§cYou are not the master of "+p.getName());
+				sender.sendMessage("ï¿½cYou are not the master of "+p.getName());
 				return true;
 			}
 		}

@@ -13,25 +13,25 @@ public class CommandInfluenceHelp extends CommandBase{
 		if(args.length != 0){
 			PluginCommand cmd = CommandManager.getCommand(args[0].toLowerCase().replace("servant", "").replace("influence", ""));
 			if(cmd != null){
-				sender.sendMessage("§2 - §6 "+cmd.getUsage()+"\n§2  >§7  "+cmd.getDescription());
+				sender.sendMessage("ï¿½2 - ï¿½6 "+cmd.getUsage()+"\nï¿½2  >ï¿½7  "+cmd.getDescription());
 				return true;
 			}
 		}
 		//grab plugin instance
 		Influence plugin = Influence.getPlugin();
 		
-		sender.sendMessage(new StringBuilder("§")
-		.append(randColor()).append("+ §7§m--------------------§b §").append(randColor()).append('+').toString());
+		sender.sendMessage(new StringBuilder("ï¿½")
+		.append(randColor()).append("+ ï¿½7ï¿½m--------------------ï¿½b ï¿½").append(randColor()).append('+').toString());
 		
 		// Send help/info/commands
 		for(String name : plugin.getDescription().getCommands().keySet()){
 			Command cmd = plugin.getCommand(name);
 			if(sender.hasPermission(cmd.getPermission())){
-				sender.sendMessage("§8 - §7 "+cmd.getUsage());//+"§f  -  "+cmd.getDescription());
+				sender.sendMessage("ï¿½8 - ï¿½7 "+cmd.getUsage());//+"ï¿½f  -  "+cmd.getDescription());
 			}
 		}
-		sender.sendMessage(new StringBuilder("§")
-		.append(randColor()).append("+ §7§m--------------------§b §").append(randColor()).append('+').toString());
+		sender.sendMessage(new StringBuilder("ï¿½")
+		.append(randColor()).append("+ ï¿½7ï¿½m--------------------ï¿½b ï¿½").append(randColor()).append('+').toString());
 		return true;
 	}
 	

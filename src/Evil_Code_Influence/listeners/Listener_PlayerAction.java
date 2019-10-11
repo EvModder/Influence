@@ -9,6 +9,7 @@ import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -110,11 +111,11 @@ public class Listener_PlayerAction implements Listener{
 	}
 	@EventHandler
 	public void onInteractBlock(PlayerInteractEvent evt){
-		if(!evt.isCancelled()){
-			evt.setCancelled(checkActionBlocked(evt.getPlayer(), Ability.INTERACT_BLOCK));
-			if(evt.getClickedBlock().getState() instanceof InventoryHolder){
-				evt.setCancelled(checkActionBlocked(evt.getPlayer(), Ability.USE_CHESTS));
-			}
+		if(evt.useInteractedBlock() != Result.DENY){
+			if(checkActionBlocked(evt.getPlayer(), Ability.INTERACT_BLOCK) ||
+			(evt.getClickedBlock().getState() instanceof InventoryHolder &&
+					checkActionBlocked(evt.getPlayer(), Ability.USE_CHESTS)))
+				evt.setUseInteractedBlock(Result.DENY);
 		}
 	}
 	@EventHandler

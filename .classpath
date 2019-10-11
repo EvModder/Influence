@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/bukkit.jar"/>
 	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/Vault.jar"/>
 	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/Essentials.jar"/>
+	<classpathentry kind="lib" path="/Users/Nate/Dropbox/Minecraft/Development/Libraries/spigot_server.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

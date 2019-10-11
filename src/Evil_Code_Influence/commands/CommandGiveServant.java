@@ -10,7 +10,7 @@ import Evil_Code_Influence.master.Master;
 
 public class CommandGiveServant extends CommandBase{
 
-	@SuppressWarnings("deprecation")
+	@Override @SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /i give <Name/all> to <Name>
 		if(args.length < 3){

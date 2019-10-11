@@ -7,7 +7,7 @@ import Evil_Code_Influence.InfluenceAPI;
 
 public class CommandTpServant extends CommandBase{
 	
-	@SuppressWarnings("deprecation")
+	@Override @SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /i tp <Name>
 		if(sender instanceof Player == false){

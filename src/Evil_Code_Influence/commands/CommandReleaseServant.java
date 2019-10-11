@@ -11,7 +11,7 @@ import Evil_Code_Influence.master.Master;
 
 public class CommandReleaseServant extends CommandBase{
 
-	@SuppressWarnings("deprecation")
+	@Override @SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /releaseservant <Name/all>
 		if(args.length < 1){

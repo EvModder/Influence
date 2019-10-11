@@ -12,7 +12,7 @@ import Evil_Code_Influence.master.Master;
 
 public class CommandTradeServant extends CommandBase{
 
-	@SuppressWarnings("deprecation")
+	@Override @SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:   /tradeservant <Name/all> <[Optional:$]> to <Name> for <Name/all> <[Optional:$]>
 		if(sender instanceof Player == false){

@@ -10,7 +10,7 @@ import Evil_Code_Influence.master.Master;
 
 public class CommandPunishServant extends CommandBase{
 
-	@SuppressWarnings("deprecation")
+	@Override @SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:   /punishservant <Name/all> <#amt>
 		if(args.length < 2){

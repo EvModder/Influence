@@ -22,7 +22,7 @@ public class CommandInfluenceOffer extends CommandBase{
 		pendingTrades = new HashMap<Long, TradeOffer>();
 	}
 	
-	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
+	@Override public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /i offer <accept/reject>
 		if(sender instanceof Player == false){
 			sender.sendMessage("�cThis command can only be run by in-game players");

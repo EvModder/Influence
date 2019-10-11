@@ -35,7 +35,7 @@ public class CommandCollectServant extends CommandBase{
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	@Override @SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /i collect <Name/all> <items/xp/servants/all>
 		if(sender instanceof Player == false){

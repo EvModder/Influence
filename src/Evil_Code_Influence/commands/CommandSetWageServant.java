@@ -16,7 +16,7 @@ public class CommandSetWageServant extends CommandBase{
 		MIN_WAGE = Influence.getPlugin().getConfig().getDouble("min-daily-wage");
 	}
 
-	@SuppressWarnings("deprecation")
+	@Override @SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /setwageservant <Name/all> <$>
 		if(args.length < 2){

@@ -7,7 +7,7 @@ import Evil_Code_Influence.InfluenceAPI;
 
 public class CommandEnderchestServant extends CommandBase{
 	
-	@SuppressWarnings("deprecation")
+	@Override @SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:   /enderchestservant <Name>
 		if(sender instanceof Player == false){

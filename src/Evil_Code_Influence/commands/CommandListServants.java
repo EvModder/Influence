@@ -14,7 +14,7 @@ import Evil_Code_Influence.master.Master;
 
 public class CommandListServants extends CommandBase{
 	
-	@SuppressWarnings("deprecation")
+	@Override @SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /i list
 		Set<UUID> targetP = new HashSet<UUID>();

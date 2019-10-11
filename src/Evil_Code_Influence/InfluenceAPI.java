@@ -114,24 +114,32 @@ public class InfluenceAPI {
 		return (p.hasPermission("influence.servant.override.*") ||
 				p.hasPermission("influence.servant.override."+action.name().toLowerCase().replace("_", "")));
 	}
-	
+
 	public static boolean checkIfServantHasPermission(Player servant, Ability action){
 		return (isServant(servant.getUniqueId()) == false ||
 				getServant(servant.getUniqueId()).hasAbility(action) ||
 				servant.hasPermission("influence.servant.override.*") ||
 				servant.hasPermission("influence.servant.override."+action.name().toLowerCase().replace("_", "")));
 	}
-	
-	private static Set<Servant> getAllServantsBelow(Master master){
-		Set<Servant> servants = new HashSet<Servant>();
-		
+
+	private static Set<Servant> getAllServantsBelow(Master master, Set<Servant> servants, Set<UUID> alreadyAdded){
 		for(UUID servant : master.getServantUUIDs()){
-			if(servants.contains(servant)) continue;
+			if(!alreadyAdded.add(servant)) continue;
 			servants.add(master.getServant(servant));
-			
-			if(plugin.masterList.containsKey(servant)){
-				servants.addAll(getAllServantsBelow(plugin.masterList.get(servant)));
-			}
+			Master servantMaster = plugin.masterList.get(servant);
+			if(servantMaster != null) getAllServantsBelow(servantMaster, servants, alreadyAdded);
+		}
+		return servants;
+	}
+	private static Set<Servant> getAllServantsBelow(Master master){
+		Set<UUID> alreadyAdded = new HashSet<UUID>();
+		Set<Servant> servants = new HashSet<Servant>();
+
+		for(UUID servant : master.getServantUUIDs()){
+			if(!alreadyAdded.add(servant)) continue;
+			servants.add(master.getServant(servant));
+			Master servantMaster = plugin.masterList.get(servant);
+			if(servantMaster != null) getAllServantsBelow(servantMaster, servants, alreadyAdded);
 		}
 		return servants;
 	}

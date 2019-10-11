@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
-import net.ess3.api.Economy;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -321,7 +320,7 @@ public class CommandUtils {
 					}
 					catch(IllegalArgumentException ex){}
 				}
-				if(maxDist == 0) targets.add((Player) servantsOnline.get(rand.nextInt(servantsOnline.size())));
+				if(maxDist == 0) targets.add(servantsOnline.get(rand.nextInt(servantsOnline.size())));
 				else{
 					maxDist = maxDist*maxDist;
 					List<Player> servantsInRange = new ArrayList<Player>();
@@ -381,8 +380,8 @@ public class CommandUtils {
 	
 	public static boolean editEssentialsBalance(OfflinePlayer p, double amount){
 		try{
-			if(amount < 0) Economy.substract(p.getName(), new BigDecimal(-amount));
-			else Economy.add(p.getName(), new BigDecimal(amount));
+			if(amount < 0) com.earth2me.essentials.api.Economy.substract(p.getName(), new BigDecimal(-amount));
+			else com.earth2me.essentials.api.Economy.add(p.getName(), new BigDecimal(amount));
 			return true;
 		}
 		catch(NoLoanPermittedException e){return false;}

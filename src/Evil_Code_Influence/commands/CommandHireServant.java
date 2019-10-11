@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 public class CommandHireServant extends CommandBase{
 
-	@SuppressWarnings("deprecation")
+	@Override @SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd:   /hireservant <Name> <$>
 		if(sender instanceof Player == false){

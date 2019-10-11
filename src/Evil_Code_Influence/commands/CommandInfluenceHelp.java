@@ -8,7 +8,7 @@ import Evil_Code_Influence.Influence;
 
 public class CommandInfluenceHelp extends CommandBase{
 	
-	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
+	@Override public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /i help <#>
 		if(args.length != 0){
 			PluginCommand cmd = CommandManager.getCommand(args[0].toLowerCase().replace("servant", "").replace("influence", ""));

@@ -15,7 +15,7 @@ import Evil_Code_Influence.servant.Servant;
 
 public class CommandPermsServant extends CommandBase{
 
-	@SuppressWarnings("deprecation")
+	@Override @SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /permsservant <Name/all> <perm> <allow/deny>
 		if(args.length == 0 || args[0].equalsIgnoreCase("all") || args[0].equals("default") || args[0].equals("defaults")){

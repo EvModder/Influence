@@ -2,7 +2,7 @@ package Evil_Code_Influence.commands;
 
 import java.util.HashSet;
 import java.util.Set;
-
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -35,25 +35,25 @@ public class CommandCollectServant extends CommandBase{
 		}
 	}
 
-	@Override @SuppressWarnings("deprecation")
+	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String args[]){
 		//cmd: /i collect <Name/all> <items/xp/servants/all>
 		if(sender instanceof Player == false){
-			sender.sendMessage("�cThis command can only be run by in-game players");
+			sender.sendMessage(ChatColor.RED+"This command can only be run by in-game players");
 			return true;
 		}
 		if(args.length < 2){
-			sender.sendMessage("�cToo few arguments!");
+			sender.sendMessage(ChatColor.RED+"Too few arguments!");
 			return false;
 		}
 		Player p = sender.getServer().getPlayer(args[0]);
 		if(p != null && InfluenceAPI.checkIsMaster(((Player)sender).getUniqueId(), p.getUniqueId()) == false){
-			sender.sendMessage("�cYou are not the master of "+p.getName());
+			sender.sendMessage(ChatColor.RED+"You are not the master of "+p.getName());
 			return true;
 		}
 		Master master = InfluenceAPI.getMasterByUUID(((Player)sender).getUniqueId());
 		if(master == null){
-			sender.sendMessage("�4ERROR: �cYou do not own any servants");
+			sender.sendMessage(ChatColor.DARK_RED+"ERROR: "+ChatColor.RED+"You do not own any servants");
 			return true;
 		}
 		

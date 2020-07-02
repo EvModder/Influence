@@ -21,12 +21,11 @@ import Evil_Code_Influence.servant.Servant;
 public class CommandUtils {
 	private static Influence plugin;
 	private static Random rand = new Random();
-	
+
 	public CommandUtils(){
 		plugin = Influence.getPlugin();
 	}
-	
-	@SuppressWarnings("deprecation")
+
 	public static Set<Player> getTargetPlayers(CommandSender sender, String arg){
 		Set<Player> targets = new HashSet<Player>();
 		
@@ -133,8 +132,7 @@ public class CommandUtils {
 		}*/
 		return targets;
 	}
-	
-	@SuppressWarnings("deprecation")
+
 	public static Set<Player> getTargetServants(CommandSender sender, String arg){
 		Set<Player> targets = new HashSet<Player>();
 		
@@ -249,8 +247,7 @@ public class CommandUtils {
 		}
 		return targets;
 	}
-	
-	@SuppressWarnings("deprecation")
+
 	public static Set<Player> getTargetServants(Master master, String arg){
 		Set<Player> targets = new HashSet<Player>();
 		

@@ -375,6 +375,7 @@ public class CommandUtils {
 		return targets;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static boolean editEssentialsBalance(OfflinePlayer p, double amount){
 		try{
 			if(amount < 0) com.earth2me.essentials.api.Economy.substract(p.getName(), new BigDecimal(-amount));

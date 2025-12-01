@@ -98,7 +98,7 @@ public class Listener_PlayerAction implements Listener{
 		if(checkActionBlocked(evt.getPlayer(), Ability.RIDE_MOB) == false){
 			
 			EntityType type = evt.getRightClicked().getType();
-			if(type == EntityType.MINECART || type == EntityType.BOAT){
+			if(type == EntityType.MINECART/* || EvUtils.isBoat(type)*/){//TODO:
 				evt.setCancelled(true);
 			}
 			else if(type == EntityType.HORSE || type == EntityType.PIG){
